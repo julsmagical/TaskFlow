@@ -10,6 +10,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.springboot.taskflow.taskflow.config.JwtProperties;
+import com.springboot.taskflow.taskflow.entities.User;
 import com.springboot.taskflow.taskflow.exceptions.InvalidTokenException;
 
 @Service
