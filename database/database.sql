@@ -28,10 +28,10 @@ CREATE TABLE [User] (
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
         
-    updated_at DATETIME2 NOT NULL
+    updated_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
         
-    deleted_at DATETIME2 NOT NULL
+    deleted_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT UQ_User_username UNIQUE (username),
@@ -55,10 +55,10 @@ CREATE TABLE Project (
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
         
-    updated_at DATETIME2 NOT NULL
+    updated_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
         
-    deleted_at DATETIME2 NOT NULL
+    deleted_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT CHK_Project_name
@@ -88,10 +88,10 @@ CREATE TABLE Task (
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
     
-    updated_at DATETIME2 NOT NULL
+    updated_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
         
-    deleted_at DATETIME2 NOT NULL
+    deleted_at DATETIME2 NULL
         DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT CHK_Task_title
