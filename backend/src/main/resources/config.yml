@@ -1,0 +1,4 @@
+jwt:
+  secret: ;!HE1=7c'9Yx,VxFfF1ohwu{>pF;\B7_
+  issuer: taskflow-api
+  expiration: 86400000
