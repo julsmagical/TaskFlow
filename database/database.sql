@@ -27,6 +27,12 @@ CREATE TABLE [User] (
 
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
+        
+    updated_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+        
+    deleted_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT UQ_User_username UNIQUE (username),
     CONSTRAINT UQ_User_email UNIQUE (email),
@@ -47,6 +53,12 @@ CREATE TABLE Project (
     status NVARCHAR(20) NOT NULL,
 
     created_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+        
+    updated_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+        
+    deleted_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT CHK_Project_name
@@ -70,9 +82,16 @@ CREATE TABLE Task (
     due_date DATE NOT NULL,
 
     project_id UNIQUEIDENTIFIER NOT NULL,
+    
     assigned_user_id UNIQUEIDENTIFIER NULL,
 
     created_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+    
+    updated_at DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+        
+    deleted_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
 
     CONSTRAINT CHK_Task_title
