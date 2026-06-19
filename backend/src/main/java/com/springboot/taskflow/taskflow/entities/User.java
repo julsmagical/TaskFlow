@@ -4,18 +4,21 @@ import java.util.UUID;
 
 import com.springboot.taskflow.taskflow.shared.Audit;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 // import jakarta.persistence.JoinColumn;
 // import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="User")
+@Table(name="[User]")
 public class User {
 
     @Id
@@ -33,6 +36,10 @@ public class User {
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "role_id")
+    Role role;
 
     // nota: no olvidar hacer un Join column
     // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -93,9 +100,28 @@ public class User {
 
     // get y set de Task
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Audit getAudit() {
+        return audit;
+    }
+
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
+
     @Override
     public String toString() {
-        return "{id=" + id + ", username=" + username + ", fullName=" + fullName + ", email=" + email
-                + ", passwordHash=" + passwordHash + "}";
+        return "{" + id + ", username=" + username + ", fullName=" + fullName + ", email=" + email
+                + ", passwordHash=" + passwordHash + ", role=" + role + ", createdAt="+ audit.getCreatedAt()
+                +", updatedAt="+ audit.getUpdatedAt()+", deletedAt="+ audit.getDeletedAt()+"}";
     }
+
+    
 }
