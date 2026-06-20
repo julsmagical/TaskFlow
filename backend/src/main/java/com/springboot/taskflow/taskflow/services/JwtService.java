@@ -25,21 +25,24 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
-        Instant now = Instant.now();
-        return JWT.create()
-            .withIssuer(properties.issuer())
-            .withSubject(user.getId().toString())
-            .withIssuedAt(Date.from(now))
-            .withExpiresAt(
-                    Date.from(now.plusMillis(properties.expiration()))
-            )
-            .sign(algorithm);
-    }
+    Instant now = Instant.now();
+    return JWT.create()
+        .withIssuer(properties.issuer())
+        .withSubject(user.getId().toString())
+        .withClaim("role", user.getRole().getName())
+        .withIssuedAt(Date.from(now))
+        .withExpiresAt(Date.from(now.plusMillis(properties.expiration())))
+        .sign(algorithm);
+}
 
     public UUID extractUserId(String token) {
         return UUID.fromString(
             validate(token).getSubject()
         );
+    }
+
+    public String extractRole(String token) {
+        return validate(token).getClaim("role").asString();
     }
 
     private DecodedJWT validate(String token) {

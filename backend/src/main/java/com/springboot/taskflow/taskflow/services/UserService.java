@@ -34,12 +34,8 @@ public class UserService {
     }
 
     public ApiResponse<UserResponse> create(CreateUserRequest request) {
-        try {
-            if(userRepository.existsByUsername(request.username())){
-            throw new BadRequestException("El nombre de usuario ya existe.");
-        }
-        } catch (BadRequestException e) {
-            return ApiResponse.error(e.getMessage());
+        if(userRepository.existsByUsername(request.username())){
+            new BadRequestException("El nombre de usuario ya existe.");
         }
         Role role = roleRepository.findById(request.roleId())
                 .orElseThrow(() -> new NotFoundException("Rol no encontrado."));
@@ -53,7 +49,7 @@ public class UserService {
         user.setEmail(request.email());
         userRepository.save(user);
         return ApiResponse.success(
-                UserMapper.toResponse(user), "Usuario creado éxitosamente."
+            UserMapper.toResponse(user), "Usuario creado éxitosamente."
         );
     }
 
