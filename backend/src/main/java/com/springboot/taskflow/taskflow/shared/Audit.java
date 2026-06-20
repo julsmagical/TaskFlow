@@ -21,12 +21,20 @@ public class Audit {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();;
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void markDeleted() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
     }
 
     public LocalDateTime getCreatedAt() {
