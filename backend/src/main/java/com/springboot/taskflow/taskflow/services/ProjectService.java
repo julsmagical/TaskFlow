@@ -60,38 +60,38 @@ public class ProjectService {
         return ProjectResponse.from(project);
     }
 
-    // @LogEjecucion
-    // @Transactional
-    // public ProjectResponse archive(UUID id) {
-    //     Project project = getProjectOrThrow(id);
+    @LogEjecucion
+    @Transactional
+    public ProjectResponse archive(UUID id) {
+        Project project = getProjectOrThrow(id);
 
-    //     boolean hasUnfinishedTasks = project.getTasks().stream()
-    //         .filter(task -> !task.getAudit().isDeleted())
-    //         .anyMatch(task -> task.getStatus() != TaskStatus.COMPLETADA);
+        boolean hasUnfinishedTasks = project.getTasks().stream()
+            .filter(task -> !task.getAudit().isDeleted())
+            .anyMatch(task -> task.getStatus() != TaskStatus.COMPLETADA);
 
-    //     if (hasUnfinishedTasks) {
-    //         throw new BusinessRuleException(
-    //             "No se puede archivar un proyecto con tareas que no estén en estado COMPLETADA."
-    //         );
-    //     }
+        if (hasUnfinishedTasks) {
+            throw new BusinessRuleException(
+                "No se puede archivar un proyecto con tareas que no estén en estado COMPLETADA."
+            );
+        }
 
-    //     project.archive();
-    //     return ProjectResponse.from(project);
-    // }
+        project.archive();
+        return ProjectResponse.from(project);
+    }
 
-    // @LogEjecucion
-    // @Transactional
-    // public void delete(UUID id) {
-    //     Project project = getProjectOrThrow(id);
+    @LogEjecucion
+    @Transactional
+    public void delete(UUID id) {
+        Project project = getProjectOrThrow(id);
 
-    //     for (Task task : project.getTasks()) {
-    //         if (!task.getAudit().isDeleted()) {
-    //             task.getAudit().markDeleted();
-    //         }
-    //     }
+        for (Task task : project.getTasks()) {
+            if (!task.getAudit().isDeleted()) {
+                task.getAudit().markDeleted();
+            }
+        }
 
-    //     project.getAudit().markDeleted();
-    // }
+        project.getAudit().markDeleted();
+    }
 
     private Project getProjectOrThrow(UUID id) {
         return projectRepository.findByIdAndAuditDeletedAtIsNull(id)
