@@ -104,8 +104,8 @@ CREATE TABLE Task (
         CHECK (
             status IN (
                 'PENDIENTE',
-                'EN PROGRESO',
-                'EN REVISIÓN',
+                'EN_PROGRESO',
+                'EN_REVISION',
                 'COMPLETADA'
             )
         ),
