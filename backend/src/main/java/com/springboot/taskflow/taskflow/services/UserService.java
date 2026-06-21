@@ -1,5 +1,7 @@
 package com.springboot.taskflow.taskflow.services;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
@@ -65,4 +67,13 @@ public class UserService {
         return ApiResponse.success(UserMapper.toResponse(user), "Usuario no encontrado.");
     }
 
+    // listar users, con filtro por rol (opcional)
+    public ApiResponse<List<UserResponse>> findAll(Optional<RoleName> role) {
+        List<User> users = role
+            .map(r -> userRepository.findByRole_NameAndAuditDeletedAtIsNullOrderByFullNameAsc(r.name()))
+            .orElseGet(userRepository::findByAuditDeletedAtIsNullOrderByFullNameAsc);
+
+        var response = users.stream().map(UserMapper::toResponse).toList();
+        return ApiResponse.success(response, "Usuarios obtenidos exitosamente.");
+    }
 }

@@ -6,6 +6,7 @@ public record UserResponse(
 
         UUID id,
         String username,
+        String fullname,
         String role
 
 ) {}
