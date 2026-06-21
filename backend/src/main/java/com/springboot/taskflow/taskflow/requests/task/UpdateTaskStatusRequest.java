@@ -4,7 +4,7 @@ import com.springboot.taskflow.taskflow.enums.TaskStatus;
 
 import jakarta.validation.constraints.NotNull;
 
-public record UpdateTaskStatus(
+public record UpdateTaskStatusRequest(
     @NotNull(message = "El estado es obligatorio.")
     TaskStatus newStatus
 ) {}
