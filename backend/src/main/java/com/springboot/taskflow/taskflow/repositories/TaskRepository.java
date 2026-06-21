@@ -1,35 +1,37 @@
 package com.springboot.taskflow.taskflow.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.springboot.taskflow.taskflow.entities.Task;
-import com.springboot.taskflow.taskflow.entities.User;
 import com.springboot.taskflow.taskflow.enums.TaskStatus;
 import com.springboot.taskflow.taskflow.enums.TaskPriority;
 
 public interface TaskRepository extends JpaRepository<Task, UUID>{
 
-    List<Task> findByStatus(TaskStatus status);
-
-    List<Task> findByPriority(TaskPriority priority);
-
-    List<Task> findByStatusAndPriority(TaskStatus status, TaskPriority priority);
-
-    List<Task> findByAssignedUserId(UUID userId);
-
-    List<Task> findByAssignedUser(User assignedUser);
-    
+    //busqueda tarea por id
+    Optional<Task> findByIdAndAuditDeletedAtIsNull(UUID id);
+ 
+    //listar tareas (sin filtros)
     List<Task> findByProjectIdAndAuditDeletedAtIsNull(UUID projectId);
+ 
+    //filtrado por estado
+    List<Task> findByProjectIdAndStatusAndAuditDeletedAtIsNull(UUID projectId, TaskStatus status);
+ 
+    //filtrado por prioridad
+    List<Task> findByProjectIdAndPriorityAndAuditDeletedAtIsNull(UUID projectId, TaskPriority priority);
+ 
+    //filtrado por estado y prioridad
+    List<Task> findByProjectIdAndStatusAndPriorityAndAuditDeletedAtIsNull(
+        UUID projectId, TaskStatus status, TaskPriority priority);
 
-    List<Task> findByProjectIdAndStatus(UUID projectId, TaskStatus status);
-   
-    List<Task> findByProjectIdAndPriority(UUID projectId, TaskPriority priority);
-
-    // nota: contar tareas no completadas de un user
-    // @Query("SELECT COUNT(t) FROM Task t WHERE assignedUser.id")
-    // long countByAssignedUser();
-
+    // nota: contar tareas no completadas
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.project.id = :projectId " +
+           "AND t.status <> 'COMPLETADA' AND t.audit.deletedAt IS NULL")
+    long countPendingTasksByProject(@Param("projectId") UUID projectId);
 }

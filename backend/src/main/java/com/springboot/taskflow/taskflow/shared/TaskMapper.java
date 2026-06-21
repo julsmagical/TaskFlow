@@ -11,6 +11,7 @@ public final class TaskMapper {
         var assignedUser = task.getAssignedUser();
         return new TaskResponse(
                 task.getId(),
+                task.getProject().getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getPriority(),

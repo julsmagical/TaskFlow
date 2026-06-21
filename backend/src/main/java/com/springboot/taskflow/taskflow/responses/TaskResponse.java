@@ -10,6 +10,7 @@ import com.springboot.taskflow.taskflow.enums.TaskStatus;
 
 public record TaskResponse(
     UUID id,
+    UUID projectId,
     String title,
     String description,
     TaskPriority priority,
@@ -21,15 +22,17 @@ public record TaskResponse(
     LocalDateTime updatedAt
 ) {
     public static TaskResponse from(Task task) {
+        var user = task.getAssignedUser();
         return new TaskResponse(
             task.getId(),
+            task.getProject().getId(),
             task.getTitle(),
             task.getDescription(),
             task.getPriority(),
             task.getStatus(),
             task.getDueDate(),
-            task.getAssignedUser().getId(),
-            task.getAssignedUser().getUsername(),
+            user != null ? user.getId() : null,
+            user != null ? user.getUsername() : null,
             task.getAudit().getCreatedAt(),
             task.getAudit().getUpdatedAt()
         );

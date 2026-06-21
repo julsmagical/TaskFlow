@@ -119,4 +119,12 @@ public class Task {
     public void setAssignedUser(User assignedUser) {
         this.assignedUser = assignedUser;
     }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }
