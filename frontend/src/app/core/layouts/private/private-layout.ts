@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SessionStore } from '../../../features/services/auth/session-store.service';
 import { AuthService } from '../../../features/services/auth/auth.service';
-import { UserRole } from '../../../shared/enums/user-role';
+import { UserRole } from '../../../shared/enums/user';
 import { NavigationItem } from '../../../features/interfaces/private/navigation-item.interface';
 
 @Component({

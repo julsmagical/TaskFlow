@@ -4,7 +4,7 @@ import { AuthenticatedUser } from '../../interfaces/public/user.interface';
 import { catchError, finalize, Observable, of, tap } from 'rxjs';
 import { TokenService } from './token.service';
 import { AuthService } from './auth.service';
-import { UserRole } from '../../../shared/enums/user-role';
+import { UserRole } from '../../../shared/enums/user';
 
 @Injectable({
   providedIn: 'root',

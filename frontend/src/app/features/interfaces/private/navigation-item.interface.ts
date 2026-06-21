@@ -1,4 +1,4 @@
-import { UserRole } from '../../../shared/enums/user-role';
+import { UserRole } from '../../../shared/enums/user';
 
 export interface NavigationItem {
   label: string;
