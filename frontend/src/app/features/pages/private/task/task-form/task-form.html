@@ -1,11 +1,13 @@
 <h2 mat-dialog-title>
-  {{ isDeveloper() ? 'Cambiar estado' : (isEdit ? 'Editar tarea' : 'Nueva tarea') }}
+  {{ isDeveloper() ? 'Cambiar estado' : isEdit ? 'Editar tarea' : 'Nueva tarea' }}
 </h2>
 
 <mat-dialog-content>
   @if (isDeveloper()) {
     <form [formGroup]="statusForm">
-      <p class="dev-note"> <mat-icon>info</mat-icon> Como desarrollador solo puedes actualizar el estado de la tarea. </p>
+      <p class="dev-note">
+        <mat-icon>info</mat-icon> Como desarrollador solo puedes actualizar el estado de la tarea.
+      </p>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Estado</mat-label>
@@ -35,7 +37,12 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
-        <textarea matInput formControlName="description" rows="3" placeholder="Descripción opcional"></textarea>
+        <textarea
+          matInput
+          formControlName="description"
+          rows="3"
+          placeholder="Descripción opcional"
+        ></textarea>
       </mat-form-field>
 
       <div class="row-2">
@@ -61,7 +68,7 @@
         <mat-select formControlName="assignedUserId">
           <mat-option [value]="null">Sin asignar</mat-option>
           @for (dev of developers(); track dev.id) {
-            <mat-option [value]="dev.id">{{ dev.fullName }} ({{ dev.username }})</mat-option>
+            <mat-option [value]="dev.id">{{ dev.fullname }} ({{ dev.username }})</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -75,7 +82,7 @@
     @if (saving()) {
       <mat-spinner diameter="18"></mat-spinner>
     } @else {
-      {{ isDeveloper() ? 'Actualizar estado' : (isEdit ? 'Guardar cambios' : 'Crear tarea') }}
+      {{ isDeveloper() ? 'Actualizar estado' : isEdit ? 'Guardar cambios' : 'Crear tarea' }}
     }
   </button>
 </mat-dialog-actions>

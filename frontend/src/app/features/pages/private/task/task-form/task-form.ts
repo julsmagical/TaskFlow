@@ -15,7 +15,11 @@ import { computed } from '@angular/core';
 import { TaskService } from '../../../../services/private/task.service';
 import { UserService } from '../../../../services/private/user.service';
 import { SessionStore } from '../../../../services/auth/session-store.service';
-import { TaskResponse, TaskRequest, TaskStatusRequest } from '../../../../interfaces/private/task.interface';
+import {
+  TaskResponse,
+  TaskRequest,
+  TaskStatusRequest,
+} from '../../../../interfaces/private/task.interface';
 import { SelectableUser } from '../../../../interfaces/public/user.interface';
 import { TaskStatus, TaskPriority } from '../../../../../shared/enums/task';
 import { signal } from '@angular/core';
@@ -28,7 +32,17 @@ export interface TaskFormData {
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule,  MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
@@ -48,14 +62,22 @@ export class TaskFormComponent implements OnInit {
   readonly saving = signal(false);
 
   readonly isEdit = !!this.data.task;
-  readonly isDeveloper = computed(() => !this.sessionStore.isAdmin() && !this.sessionStore.isLeader());
+  readonly isDeveloper = computed(
+    () => !this.sessionStore.isAdmin() && !this.sessionStore.isLeader(),
+  );
 
   //para admin/lider
   readonly form = this.fb.group({
-    title: [this.data.task?.title ?? '', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    title: [
+      this.data.task?.title ?? '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+    ],
     description: [this.data.task?.description ?? ''],
     priority: [this.data.task?.priority ?? TaskPriority.MEDIO, Validators.required],
-    dueDate: [this.data.task ? this.toDateInputValue(this.data.task.dueDate) : '', Validators.required],
+    dueDate: [
+      this.data.task ? this.toDateInputValue(this.data.task.dueDate) : '',
+      Validators.required,
+    ],
     assignedUserId: [this.data.task?.assignedUserID ?? null],
   });
 
@@ -73,12 +95,12 @@ export class TaskFormComponent implements OnInit {
       [TaskStatus.EN_REVISION]: [TaskStatus.COMPLETADA],
       [TaskStatus.COMPLETADA]: [],
     };
-    const next = current ? transitions[current] ?? [] : [];
+    const next = current ? (transitions[current] ?? []) : [];
     return current ? [current, ...next] : Object.values(TaskStatus);
   }
 
   ngOnInit(): void {
-    if (!this.isDeveloper) {
+    if (!this.isDeveloper()) {
       this.userService.findDevelopers().subscribe((devs) => this.developers.set(devs));
     }
   }
@@ -115,7 +137,10 @@ export class TaskFormComponent implements OnInit {
       : this.taskService.create(this.data.projectId, request);
 
     op$.subscribe({
-      next: (task) => { this.saving.set(false); this.dialogRef.close(task); },
+      next: (task) => {
+        this.saving.set(false);
+        this.dialogRef.close(task);
+      },
       error: (err) => {
         this.saving.set(false);
         const msg = err?.error?.message ?? 'Error al guardar la tarea';
@@ -130,7 +155,10 @@ export class TaskFormComponent implements OnInit {
     const req: TaskStatusRequest = { newStatus: this.statusForm.value.newStatus as TaskStatus };
 
     this.taskService.updateStatus(this.data.task.id, req as any).subscribe({
-      next: (task) => { this.saving.set(false); this.dialogRef.close(task); },
+      next: (task) => {
+        this.saving.set(false);
+        this.dialogRef.close(task);
+      },
       error: (err) => {
         this.saving.set(false);
         const msg = err?.error?.message ?? 'Transición de estado no permitida';
