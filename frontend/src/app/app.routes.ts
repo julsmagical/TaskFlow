@@ -34,6 +34,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/pages/private/home/home').then((c) => c.HomeComponent),
       },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./features/pages/private/project/projects.component').then(
+            (c) => c.ProjectsComponent,
+          ),
+      },
     ],
   },
   {

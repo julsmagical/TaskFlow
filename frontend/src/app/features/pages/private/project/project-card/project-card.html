@@ -1,0 +1,110 @@
+<mat-expansion-panel class="project-panel" (opened)="loadTasks.emit(project.id)">
+  <mat-expansion-panel-header>
+    <div class="project-header">
+      <div class="project-title">
+        <div class="project-name">
+          {{ project.name }}
+        </div>
+
+        <div class="project-description">
+          {{ project.description || 'Sin descripción' }}
+        </div>
+      </div>
+
+      <div class="project-status">
+        <mat-chip
+          class="status-chip"
+          [ngClass]="{
+            active: project.status === ProjectStatus.ACTIVO,
+            archived: project.status === ProjectStatus.ARCHIVADO,
+          }"
+        >
+          {{ project.status }}
+        </mat-chip>
+      </div>
+
+      <div class="project-leader">
+        <span class="leader-label"> Líder </span>
+
+        <span class="leader-name">
+          {{ project.leaderName }}
+        </span>
+      </div>
+
+      @if (canManage || canCreateTask) {
+        <div class="project-menu">
+          @if (canCreateTask) {
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Agregar tarea"
+              (click)="$event.stopPropagation(); createTask.emit(project)"
+            >
+              <mat-icon>add_task</mat-icon>
+            </button>
+          }
+
+          @if (canManage) {
+            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="edit.emit(project)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+
+              @if (project.status !== ProjectStatus.ARCHIVADO) {
+                <button mat-menu-item (click)="archive.emit(project)">
+                  <mat-icon>archive</mat-icon>
+                  <span>Archivar</span>
+                </button>
+              }
+
+              <button mat-menu-item (click)="delete.emit(project)">
+                <mat-icon color="warn">delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+            </mat-menu>
+          }
+        </div>
+      }
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="tasks">
+    @for (task of tasks; track task.id) {
+      <mat-card class="task-card">
+        <div class="task-header">
+          <div>
+            <div class="task-title">
+              {{ task.title }}
+            </div>
+
+            <div class="assigned">
+              <mat-icon>person</mat-icon>
+              {{ task.assignedUsername }}
+            </div>
+          </div>
+
+          <div class="task-chips">
+            <mat-chip class="priority-chip" [ngClass]="task.priority.toLowerCase()">
+              {{ task.priority }}
+            </mat-chip>
+
+            <mat-chip class="task-status-chip" [ngClass]="task.status.toLowerCase()">
+              {{ task.status }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card>
+    } @empty {
+      <div class="empty">
+        <mat-icon>task_alt</mat-icon>
+
+        <p>No hay tareas registradas.</p>
+      </div>
+    }
+  </div>
+</mat-expansion-panel>

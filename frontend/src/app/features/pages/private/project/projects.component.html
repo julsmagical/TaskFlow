@@ -1,0 +1,82 @@
+<div class="header">
+  <h1>Proyectos</h1>
+
+  @if (sessionStore.isLeader() || sessionStore.isAdmin()) {
+    <button mat-flat-button color="primary" (click)="createProject()">
+      <mat-icon>add</mat-icon>
+      Nuevo proyecto
+    </button>
+  }
+</div>
+
+<div class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Buscar proyecto</mat-label>
+
+    <input matInput [ngModel]="search()" (ngModelChange)="search.set($event)" />
+
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Estado</mat-label>
+
+    <mat-select [value]="selectedStatus()" (valueChange)="onStatusChange($event)">
+      <mat-option [value]="null"> Todos </mat-option>
+
+      <mat-option value="ACTIVO"> Activo </mat-option>
+
+      <mat-option value="ARCHIVADO"> Archivado </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (loading()) {
+  <div class="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+} @else {
+  @if (showLeaderSection) {
+    <h2 class="section-title">Proyectos que lidero</h2>
+
+    <mat-accordion multi>
+      @for (project of leaderProjects(); track project.id) {
+        <app-project-card
+          [project]="project"
+          [tasks]="getTasks(project.id)"
+          [canManage]="canManage(project)"
+          [canCreateTask]="canCreateTask(project)"
+          (loadTasks)="loadTasks($event)"
+          (createTask)="createTask($event)"
+          (edit)="editProject($event)"
+          (archive)="archiveProject($event)"
+          (delete)="deleteProject($event)"
+        />
+      }
+    </mat-accordion>
+  }
+
+  <h2 class="section-title">
+    @if (sessionStore.isAdmin()) {
+      Todos los proyectos
+    } @else {
+      Proyectos donde desarrollo
+    }
+  </h2>
+
+  <mat-accordion multi>
+    @for (project of memberProjects(); track project.id) {
+      <app-project-card
+        [project]="project"
+        [tasks]="getTasks(project.id)"
+        [canManage]="canManage(project)"
+        [canCreateTask]="canCreateTask(project)"
+        (loadTasks)="loadTasks($event)"
+        (createTask)="createTask($event)"
+        (edit)="editProject($event)"
+        (archive)="archiveProject($event)"
+        (delete)="deleteProject($event)"
+      />
+    }
+  </mat-accordion>
+}
