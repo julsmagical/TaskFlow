@@ -33,7 +33,6 @@ export class AuthService {
   logout(): void {
     this.tokenService.clearToken();
     this.sessionStore.clear();
-    this.router.navigate(['/login']);
   }
 
   me(): Observable<AuthenticatedUser> {
