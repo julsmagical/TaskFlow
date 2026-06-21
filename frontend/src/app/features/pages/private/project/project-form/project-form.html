@@ -1,0 +1,61 @@
+<div class="project-form">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>{{ data?.project ? 'edit' : 'folder' }}</mat-icon>
+    </div>
+
+    <div class="header-text">
+      <h2>{{ data?.project ? 'Editar proyecto' : 'Nuevo proyecto' }}</h2>
+      <p class="subtitle">Define el nombre y una descripción breve para tu equipo.</p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nombre</mat-label>
+
+        <input matInput formControlName="name" placeholder="Ej. Rediseño plataforma de pagos" />
+
+        @if (
+          form.controls.name.hasError('required') && (form.controls.name.touched || submitted())
+        ) {
+          <mat-error>El nombre es obligatorio.</mat-error>
+        } @else if (form.controls.name.hasError('minlength')) {
+          <mat-error>Mínimo 3 caracteres.</mat-error>
+        } @else if (form.controls.name.hasError('maxlength')) {
+          <mat-error>Máximo 100 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Descripción</mat-label>
+
+        <textarea
+          matInput
+          rows="4"
+          formControlName="description"
+          placeholder="¿De qué trata este proyecto? (opcional)"
+        ></textarea>
+
+        <mat-hint align="end"> {{ form.controls.description.value?.length ?? 0 }}/500 </mat-hint>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="btn-ghost">Cancelar</button>
+
+    <button mat-flat-button color="primary" [disabled]="loading()" (click)="submit()">
+      @if (loading()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        @if (data?.project) {
+          Guardar cambios
+        } @else {
+          Crear proyecto
+        }
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

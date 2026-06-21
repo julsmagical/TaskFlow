@@ -1,0 +1,101 @@
+.project-form {
+  display: flex;
+  flex-direction: column;
+}
+
+// ===== Header con ícono =====
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 28px 32px 24px;
+  background: var(--mat-sys-surface-container-low);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.header-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+
+  display: grid;
+  place-items: center;
+
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+
+  mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-text h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.header-text .subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--mat-sys-on-surface-variant, #6b7280);
+}
+
+// ===== Contenido del formulario =====
+mat-dialog-content {
+  display: flex;
+  justify-content: center;
+  padding: 24px 32px 8px;
+}
+
+form {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+mat-dialog-actions {
+  margin-top: 8px;
+  padding: 24px 32px 28px;
+  gap: 8px;
+}
+
+.btn-ghost {
+  color: var(--mat-sys-on-surface-variant, #6b7280);
+}
+
+button[mat-flat-button] {
+  min-width: 170px;
+  height: 44px;
+  border-radius: 999px;
+}
+
+button mat-spinner {
+  margin: auto;
+}

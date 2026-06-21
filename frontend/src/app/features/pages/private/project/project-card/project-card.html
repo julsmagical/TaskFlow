@@ -13,6 +13,7 @@
 
       <div class="project-status">
         <mat-chip
+          highlighted
           class="status-chip"
           [ngClass]="{
             active: project.status === ProjectStatus.ACTIVO,
@@ -89,11 +90,11 @@
           </div>
 
           <div class="task-chips">
-            <mat-chip class="priority-chip" [ngClass]="task.priority.toLowerCase()">
+            <mat-chip highlighted class="priority-chip" [ngClass]="task.priority.toLowerCase()">
               {{ task.priority }}
             </mat-chip>
 
-            <mat-chip class="task-status-chip" [ngClass]="task.status.toLowerCase()">
+            <mat-chip highlighted class="task-status-chip" [ngClass]="task.status.toLowerCase()">
               {{ task.status }}
             </mat-chip>
           </div>

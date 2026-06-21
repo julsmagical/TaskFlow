@@ -20,6 +20,8 @@ import { SessionStore } from '../../../services/auth/session-store.service';
 import { ProjectStatus } from '../../../../shared/enums/project';
 import { CommonModule } from '@angular/common';
 import { ProjectCardComponent } from './project-card/project-card';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectFormComponent } from './project-form/project-form';
 
 @Component({
   selector: 'app-projects',
@@ -47,6 +49,8 @@ export class ProjectsComponent implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly taskService = inject(TaskService);
   readonly sessionStore = inject(SessionStore);
+
+  private readonly dialog = inject(MatDialog);
 
   readonly projects = signal<ProjectResponse[]>([]);
   readonly loading = signal(false);
@@ -132,9 +136,36 @@ export class ProjectsComponent implements OnInit {
     return this.tasks().get(projectId) ?? [];
   }
 
-  createProject(): void {}
+  createProject(): void {
+    const dialogRef = this.dialog.open(ProjectFormComponent, {
+      width: '600px',
+    });
 
-  editProject(project: ProjectResponse): void {}
+    dialogRef.afterClosed().subscribe((created) => {
+      if (!created) {
+        return;
+      }
+
+      this.projects.update((projects) => [created, ...projects]);
+    });
+  }
+
+  editProject(project: ProjectResponse): void {
+    const dialogRef = this.dialog.open(ProjectFormComponent, {
+      width: '600px',
+      data: {
+        project,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((updated) => {
+      if (!updated) {
+        return;
+      }
+
+      this.projects.update((projects) => projects.map((p) => (p.id === updated.id ? updated : p)));
+    });
+  }
 
   deleteProject(project: ProjectResponse): void {}
 
