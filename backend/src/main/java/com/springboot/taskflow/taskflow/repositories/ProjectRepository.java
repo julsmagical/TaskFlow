@@ -11,9 +11,13 @@ import com.springboot.taskflow.taskflow.enums.ProjectStatus;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
+    List<Project> findByAuditDeletedAtIsNull();
+
     List<Project> findByStatusAndAuditDeletedAtIsNull(ProjectStatus status);
 
-    List<Project> findByAuditDeletedAtIsNull();
+    List<Project> findByLeaderIdAndAuditDeletedAtIsNull(UUID leaderId);
+
+    List<Project> findByLeaderIdAndStatusAndAuditDeletedAtIsNull(UUID leaderId, ProjectStatus status);
 
     Optional<Project> findByIdAndAuditDeletedAtIsNull(UUID id);
 }

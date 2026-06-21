@@ -20,7 +20,7 @@ public class DataInitializer {
 
         return args -> {
             if (!userRepository.existsByUsername(UserConstants.DEFAULT_ADMIN_USERNAME)) {
-                Role leaderRole = roleRepository.findByName(RoleName.LIDER.name()).orElseThrow();
+                Role adminRole = roleRepository.findByName(RoleName.ADMINISTRADOR.name()).orElseThrow();
                 User admin = new User();
                 admin.setUsername(UserConstants.DEFAULT_ADMIN_USERNAME);
                 admin.setFullName(UserConstants.DEFAULT_ADMIN_FULLNAME);
@@ -28,7 +28,7 @@ public class DataInitializer {
                 admin.setPasswordHash(
                     passwordEncoder.encode(UserConstants.DEFAULT_ADMIN_PASSWORD)
                 );
-                admin.setRole(leaderRole);
+                admin.setRole(adminRole);
                 userRepository.save(admin);
             }
         };

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,7 +21,8 @@ import com.springboot.taskflow.taskflow.enums.ProjectStatus;
 import com.springboot.taskflow.taskflow.requests.ProjectRequest;
 import com.springboot.taskflow.taskflow.responses.ApiResponse;
 import com.springboot.taskflow.taskflow.responses.ProjectResponse;
-import com.springboot.taskflow.taskflow.security.RequireLider;
+import com.springboot.taskflow.taskflow.security.AuthHelper;
+import com.springboot.taskflow.taskflow.security.RequireLiderOrAdmin;
 import com.springboot.taskflow.taskflow.services.ProjectService;
 
 import jakarta.validation.Valid;
@@ -36,44 +38,71 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> findAll(@RequestParam(required = false) ProjectStatus estado) {
-        var projects = projectService.findAll(Optional.ofNullable(estado));
+    public ResponseEntity<ApiResponse<?>> findAll(
+            @RequestParam(required = false) ProjectStatus estado,
+            Authentication authentication) {
+
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        String role = AuthHelper.getCurrentRole(authentication);
+
+        var projects = projectService.findAll(userId, role, Optional.ofNullable(estado));
         return ResponseEntity.ok(ApiResponse.success(projects, "Proyectos obtenidos con éxito."));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> findById(@PathVariable UUID id) {
-        ProjectResponse project = projectService.findById(id);
+    public ResponseEntity<ApiResponse<?>> findById(@PathVariable UUID id, Authentication authentication) {
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        String role = AuthHelper.getCurrentRole(authentication);
+
+        ProjectResponse project = projectService.findById(id, userId, role);
         return ResponseEntity.ok(ApiResponse.success(project, "Proyecto obtenido con éxito."));
     }
 
     @PostMapping
-    @RequireLider
-    public ResponseEntity<ApiResponse<?>> create(@Valid @RequestBody ProjectRequest request) {
-        ProjectResponse created = projectService.create(request);
+    @RequireLiderOrAdmin
+    public ResponseEntity<ApiResponse<?>> create(
+            @Valid @RequestBody ProjectRequest request,
+            Authentication authentication) {
+
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        ProjectResponse created = projectService.create(request, userId);
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(ApiResponse.success(created, "Proyecto creado con éxito."));
     }
 
     @PutMapping("/{id}")
-    @RequireLider
-    public ResponseEntity<ApiResponse<?>> update(@PathVariable UUID id, @Valid @RequestBody ProjectRequest request) {
-        ProjectResponse updated = projectService.update(id, request);
+    @RequireLiderOrAdmin
+    public ResponseEntity<ApiResponse<?>> update(
+            @PathVariable UUID id,
+            @Valid @RequestBody ProjectRequest request,
+            Authentication authentication) {
+
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        String role = AuthHelper.getCurrentRole(authentication);
+
+        ProjectResponse updated = projectService.update(id, request, userId, role);
         return ResponseEntity.ok(ApiResponse.success(updated, "Proyecto actualizado con éxito."));
     }
 
     @PatchMapping("/{id}/archive")
-    @RequireLider
-    public ResponseEntity<ApiResponse<?>> archive(@PathVariable UUID id) {
-        ProjectResponse archived = projectService.archive(id);
+    @RequireLiderOrAdmin
+    public ResponseEntity<ApiResponse<?>> archive(@PathVariable UUID id, Authentication authentication) {
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        String role = AuthHelper.getCurrentRole(authentication);
+
+        ProjectResponse archived = projectService.archive(id, userId, role);
         return ResponseEntity.ok(ApiResponse.success(archived, "Proyecto archivado con éxito."));
     }
 
     @DeleteMapping("/{id}")
-    @RequireLider
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        projectService.delete(id);
+    @RequireLiderOrAdmin
+    public ResponseEntity<Void> delete(@PathVariable UUID id, Authentication authentication) {
+        UUID userId = AuthHelper.getCurrentUserId(authentication);
+        String role = AuthHelper.getCurrentRole(authentication);
+
+        projectService.delete(id, userId, role);
         return ResponseEntity.noContent().build();
     }
 }

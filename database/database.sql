@@ -28,11 +28,9 @@ CREATE TABLE [User] (
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
         
-    updated_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    updated_at DATETIME2 NULL,
         
-    deleted_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    deleted_at DATETIME2 NULL,
 
     CONSTRAINT UQ_User_username UNIQUE (username),
     CONSTRAINT UQ_User_email UNIQUE (email),
@@ -50,22 +48,26 @@ CREATE TABLE Project (
     name NVARCHAR(100) NOT NULL,
     description NVARCHAR(500) NULL,
 
+    leader_id UNIQUEIDENTIFIER NOT NULL,
+
     status NVARCHAR(20) NOT NULL,
 
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
         
-    updated_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    updated_at DATETIME2 NULL,
         
-    deleted_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    deleted_at DATETIME2 NULL,
 
     CONSTRAINT CHK_Project_name
         CHECK (LEN(name) BETWEEN 3 AND 100),
 
     CONSTRAINT CHK_Project_status
-        CHECK (status IN ('ACTIVO', 'ARCHIVADO'))
+        CHECK (status IN ('ACTIVO', 'ARCHIVADO')),
+
+    CONSTRAINT FK_Project_Leader
+        FOREIGN KEY (leader_id)
+        REFERENCES [User](id)
 );
 
 CREATE TABLE Task (
@@ -88,11 +90,9 @@ CREATE TABLE Task (
     created_at DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
     
-    updated_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    updated_at DATETIME2 NULL,
         
-    deleted_at DATETIME2 NULL
-        DEFAULT SYSUTCDATETIME(),
+    deleted_at DATETIME2 NULL,
 
     CONSTRAINT CHK_Task_title
         CHECK (LEN(title) BETWEEN 3 AND 150),
@@ -121,5 +121,6 @@ CREATE TABLE Task (
 
 INSERT INTO Role (name)
 VALUES
+('ADMINISTRADOR'),
 ('LIDER'),
 ('DESARROLLADOR');

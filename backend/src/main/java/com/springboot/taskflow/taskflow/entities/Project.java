@@ -16,6 +16,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -37,6 +39,10 @@ public class Project {
     @Column(nullable = false, length = 20)
     private ProjectStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leader_id", nullable = false)
+    private User leader;
+
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
@@ -45,10 +51,11 @@ public class Project {
 
     protected Project() {}
 
-    public Project(String name, String description) {
+    public Project(String name, String description, User leader) {
         this.name = name;
         this.description = description;
         this.status = ProjectStatus.ACTIVO;
+        this.leader = leader;
     }
 
     public UUID getId() {
@@ -81,6 +88,14 @@ public class Project {
 
     public boolean isArchived() {
         return status == ProjectStatus.ARCHIVADO;
+    }
+
+    public User getLeader() {
+        return leader;
+    }
+
+    public boolean isOwnedBy(UUID userId) {
+        return leader.getId().equals(userId);
     }
 
     public List<Task> getTasks() {

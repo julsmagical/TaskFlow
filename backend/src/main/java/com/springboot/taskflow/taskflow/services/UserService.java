@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.taskflow.taskflow.entities.Role;
 import com.springboot.taskflow.taskflow.entities.User;
+import com.springboot.taskflow.taskflow.enums.RoleName;
 import com.springboot.taskflow.taskflow.exceptions.NotFoundException;
 import com.springboot.taskflow.taskflow.repositories.RoleRepository;
 import com.springboot.taskflow.taskflow.repositories.UserRepository;
@@ -37,8 +38,12 @@ public class UserService {
         if(userRepository.existsByUsername(request.username())){
             new BadRequestException("El nombre de usuario ya existe.");
         }
-        Role role = roleRepository.findById(request.roleId())
+        Role role = roleRepository.findByName(RoleName.DESARROLLADOR.name())
+            .orElseThrow(() -> new NotFoundException("Rol por defecto no configurado."));
+        if(request.roleId() != null){
+            role = roleRepository.findById(request.roleId())
                 .orElseThrow(() -> new NotFoundException("Rol no encontrado."));
+        }
         User user = new User();
         user.setUsername(request.username());
         user.setPasswordHash(

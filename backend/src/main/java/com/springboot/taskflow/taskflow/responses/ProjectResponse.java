@@ -12,6 +12,8 @@ public record ProjectResponse(
     String name,
     String description,
     ProjectStatus status,
+    UUID leaderId,
+    String leaderName,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -21,6 +23,8 @@ public record ProjectResponse(
             project.getName(),
             project.getDescription(),
             project.getStatus(),
+            project.getLeader().getId(),
+            project.getLeader().getFullName(),
             project.getAudit().getCreatedAt(),
             project.getAudit().getUpdatedAt()
         );

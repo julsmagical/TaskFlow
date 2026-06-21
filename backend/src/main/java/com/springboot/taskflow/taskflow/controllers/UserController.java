@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.taskflow.taskflow.requests.CreateUserRequest;
 import com.springboot.taskflow.taskflow.responses.ApiResponse;
 import com.springboot.taskflow.taskflow.responses.UserResponse;
+import com.springboot.taskflow.taskflow.security.RequireAdmin;
+import com.springboot.taskflow.taskflow.security.RequireLiderOrAdmin;
 import com.springboot.taskflow.taskflow.services.UserService;
 
 import jakarta.validation.Valid;
@@ -29,11 +31,13 @@ public class UserController {
     }
 
     @PostMapping
+    @RequireAdmin
     public ResponseEntity<ApiResponse<UserResponse>> create(@RequestBody @Valid CreateUserRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
     }
 
     @GetMapping("/{id}")
+    @RequireLiderOrAdmin
     public ResponseEntity<ApiResponse<UserResponse>> findById(@PathVariable UUID id){
         return ResponseEntity.ok(userService.findById(id));
     }
