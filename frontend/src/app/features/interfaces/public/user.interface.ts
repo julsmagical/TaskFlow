@@ -25,6 +25,6 @@ export interface AuthenticatedUser {
 export interface SelectableUser {
   id: string;
   username: string;
-  fullName: string;
+  fullname: string;
   role: UserRole;
 }

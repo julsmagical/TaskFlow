@@ -42,9 +42,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/pages/admin/user/users.component').then((c) => c.UsersComponent),
+      },
+      {
         path: 'tasks',
-        loadChildren: () =>
-          import('./features/routes/task.route').then((c) => c.taskRoutes),
+        loadChildren: () => import('./features/routes/task.route').then((c) => c.taskRoutes),
       },
     ],
   },

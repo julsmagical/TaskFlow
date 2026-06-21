@@ -1,0 +1,46 @@
+<div class="users-page">
+  <div class="page-header">
+    <div>
+      <h1>Usuarios</h1>
+      <p>Administra las personas con acceso a TaskFlow.</p>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="createUser()">
+      <mat-icon>person_add</mat-icon>
+      Nuevo usuario
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      placeholder="Buscar por nombre o usuario..."
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+  </mat-form-field>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (groupedUsers().length === 0) {
+    <div class="empty-state">
+      <mat-icon>group_off</mat-icon>
+      <p>No se encontraron usuarios.</p>
+    </div>
+  } @else {
+    @for (group of groupedUsers(); track group.role) {
+      <section class="role-section">
+        <h2>{{ group.label }}</h2>
+
+        <div class="users-grid">
+          @for (user of group.users; track user.id) {
+            <app-user-card [user]="user" />
+          }
+        </div>
+      </section>
+    }
+  }
+</div>
