@@ -1,7 +1,9 @@
 package com.springboot.taskflow.taskflow.services;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -36,22 +38,42 @@ public class ProjectService {
 
     @LogEjecucion
     public List<ProjectResponse> findAll(UUID currentUserId, String currentUserRole, Optional<ProjectStatus> status) {
-
-        List<Project> projects;
-
         if (RoleName.ADMINISTRADOR.name().equals(currentUserRole)) {
-            projects = status
+            List<Project> projects = status
                 .map(projectRepository::findByStatusAndAuditDeletedAtIsNull)
                 .orElseGet(projectRepository::findByAuditDeletedAtIsNull);
-        } else {
-            projects = status
-                .map(s -> projectRepository.findByLeaderIdAndStatusAndAuditDeletedAtIsNull(currentUserId, s))
-                .orElseGet(() -> projectRepository.findByLeaderIdAndAuditDeletedAtIsNull(currentUserId));
+
+            return projects.stream().map(ProjectResponse::from).toList();
         }
 
-        return projects.stream()
-            .map(ProjectResponse::from)
-            .toList();
+        Set<Project> projects = new LinkedHashSet<>();
+
+        if (status.isPresent()) {
+            ProjectStatus projectStatus = status.get();
+
+            projects.addAll(
+                projectRepository.findByLeaderIdAndStatusAndAuditDeletedAtIsNull(
+                    currentUserId,
+                    projectStatus
+                )
+            );
+
+            projects.addAll(
+                projectRepository.findDistinctByTasksAssignedUserIdAndStatusAndAuditDeletedAtIsNull(
+                    currentUserId,
+                    projectStatus
+                )
+            );
+
+        } else {
+            projects.addAll(
+                projectRepository.findByLeaderIdAndAuditDeletedAtIsNull(currentUserId)
+            );
+            projects.addAll(
+                projectRepository.findDistinctByTasksAssignedUserIdAndAuditDeletedAtIsNull(currentUserId)
+            );
+        }
+        return projects.stream().map(ProjectResponse::from).toList();
     }
 
     @LogEjecucion

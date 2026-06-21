@@ -20,4 +20,8 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
     List<Project> findByLeaderIdAndStatusAndAuditDeletedAtIsNull(UUID leaderId, ProjectStatus status);
 
     Optional<Project> findByIdAndAuditDeletedAtIsNull(UUID id);
+
+    List<Project> findDistinctByTasksAssignedUserIdAndAuditDeletedAtIsNull(UUID assignedUserId);
+
+    List<Project> findDistinctByTasksAssignedUserIdAndStatusAndAuditDeletedAtIsNull(UUID assignedUserId,ProjectStatus status);
 }
