@@ -1,26 +1,15 @@
 :host {
-  display: flex;
+  display: block;
 
-  justify-content: center;
-  align-items: center;
-
-  min-height: 100vh;
-
-  background: #f5f7fb;
+  width: 100%;
 }
 
 .login-container {
   width: 100%;
-
-  padding: 24px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px;
-
-  margin: auto;
-
   padding: 16px;
 }
 
