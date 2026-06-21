@@ -1,6 +1,7 @@
-export interface Jwt{
-    //userID
-    //role
-    expiration: number;
-    issuer: string;
+export interface JwtPayload {
+  sub: string;
+  role: string;
+  iss: string;
+  exp: number;
+  iat: number;
 }

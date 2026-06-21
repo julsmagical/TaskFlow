@@ -1,8 +1,8 @@
 export interface LoginRequest {
-    username: String;
-    password: String;
+  username: string;
+  password: string;
 }
 
 export interface LoginResponse {
-    token: String;
+  token: string;
 }
