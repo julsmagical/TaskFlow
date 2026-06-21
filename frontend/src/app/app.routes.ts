@@ -41,6 +41,11 @@ export const routes: Routes = [
             (c) => c.ProjectsComponent,
           ),
       },
+      {
+        path: 'tasks',
+        loadChildren: () =>
+          import('./features/routes/task.route').then((c) => c.taskRoutes),
+      },
     ],
   },
   {

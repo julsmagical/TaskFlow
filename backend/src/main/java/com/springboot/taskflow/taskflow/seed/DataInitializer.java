@@ -31,6 +31,18 @@ public class DataInitializer {
                 admin.setRole(adminRole);
                 userRepository.save(admin);
             }
+            if (!userRepository.existsByUsername(UserConstants.DEFAULT_DESARROLLADOR_USERNAME)) {
+                Role userRole = roleRepository.findByName(RoleName.DESARROLLADOR.name()).orElseThrow();
+                User user = new User();
+                user.setUsername(UserConstants.DEFAULT_DESARROLLADOR_USERNAME);
+                user.setFullName(UserConstants.DEFAULT_DESARROLLADOR_FULLNAME);
+                user.setEmail(UserConstants.DEFAULT_DESARROLLADOR_EMAIL);
+                user.setPasswordHash(
+                    passwordEncoder.encode(UserConstants.DEFAULT_DESARROLLADOR_PASSWORD)
+                );
+                user.setRole(userRole);
+                userRepository.save(user);
+            }
         };
     }
 }
