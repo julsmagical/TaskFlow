@@ -90,13 +90,13 @@ mat-expansion-panel {
 }
 
 .project-panel {
-  margin-bottom: 16px !important;
-  border-radius: 12px !important;
+  margin-bottom: 16px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
 ::ng-deep .mat-expansion-panel-spacing {
-  border-radius: 12px !important;
+  border-radius: 12px;
 }
 
 .status-chip.activo {
