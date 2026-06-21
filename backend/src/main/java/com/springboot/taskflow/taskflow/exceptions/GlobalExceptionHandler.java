@@ -1,6 +1,7 @@
 package com.springboot.taskflow.taskflow.exceptions;
 
 import java.nio.file.AccessDeniedException;
+import java.util.stream.Collectors;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
-        return ResponseEntity.badRequest() .body(ApiResponse.error(ex.getMessage()));
-    }
+    // @ExceptionHandler(BadRequestException.class)
+    // public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
+    //     return ResponseEntity.badRequest() .body(ApiResponse.error(ex.getMessage()));
+    // }
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidToken(InvalidTokenException ex) {
@@ -36,18 +37,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(ex.getMessage()));
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error("No tienes permisos para realizar esta acción."));
+    @ExceptionHandler({
+        org.springframework.security.access.AccessDeniedException.class,
+        java.nio.file.AccessDeniedException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(Exception ex) {
+        String message = (ex.getMessage() != null && !ex.getMessage().isBlank())
+            ? ex.getMessage() : "No tienes permisos para realizar esta accion.";
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidation(org.springframework.web.bind.MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
         String mensaje = ex.getBindingResult().getFieldErrors().stream()
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
-            .collect(java.util.stream.Collectors.joining(", "));
-
-        return ResponseEntity.badRequest().body(ApiResponse.error(mensaje));
+            .collect(Collectors.joining(", "));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("Los datos enviados no son validos: " + mensaje));
     }
 
     @ExceptionHandler(BusinessRuleException.class)
@@ -57,7 +62,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse<Void>> handleBadCredentials(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Credenciales no válidas."));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Las credenciales son incorrectas."));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -68,7 +73,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception ex) {
         ex.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ha ocurrido un error inesperado."));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ha ocurrido un error inesperado en el servidor."));
     }
-
 }
