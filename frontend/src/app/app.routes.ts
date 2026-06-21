@@ -15,7 +15,6 @@ export const routes: Routes = [
       },
     ],
   },
-
   {
     path: '',
     component: PrivateLayout,
@@ -28,7 +27,6 @@ export const routes: Routes = [
       },
     ],
   },
-
   {
     path: '',
     pathMatch: 'full',
