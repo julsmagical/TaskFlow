@@ -1,3 +1,5 @@
+import { UserRole } from '../../../shared/enums/user';
+
 export interface Role {
   id: String;
   name: String;
@@ -17,4 +19,12 @@ export interface AuthenticatedUser {
   id: string;
   username: string;
   role: string;
+}
+
+// para asignar tarea
+export interface SelectableUser {
+  id: string;
+  username: string;
+  fullName: string;
+  role: UserRole;
 }
