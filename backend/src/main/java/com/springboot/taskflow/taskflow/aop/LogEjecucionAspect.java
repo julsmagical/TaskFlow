@@ -15,7 +15,7 @@ public class LogEjecucionAspect {
 
     private static final Logger log = LoggerFactory.getLogger(LogEjecucionAspect.class);
 
-    @Around("@annotation(com.springboot.taskflow.taskflow.shared.aop.LogEjecucion)")
+    @Around("@annotation(com.springboot.taskflow.taskflow.aop.LogEjecucion)")
     public Object logExecution(ProceedingJoinPoint joinPoint) throws Throwable {
 
         String methodName = joinPoint.getSignature().getName();
