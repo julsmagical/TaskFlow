@@ -1,5 +1,7 @@
 package com.springboot.taskflow.taskflow.controllers;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.taskflow.taskflow.enums.RoleName;
 import com.springboot.taskflow.taskflow.requests.CreateUserRequest;
 import com.springboot.taskflow.taskflow.responses.ApiResponse;
 import com.springboot.taskflow.taskflow.responses.UserResponse;
@@ -40,5 +44,12 @@ public class UserController {
     @RequireLiderOrAdmin
     public ResponseEntity<ApiResponse<UserResponse>> findById(@PathVariable UUID id){
         return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @GetMapping
+    @RequireLiderOrAdmin
+    public ResponseEntity<ApiResponse<List<UserResponse>>> findAll(
+            @RequestParam(required = false) RoleName role){
+        return ResponseEntity.ok(userService.findAll(Optional.ofNullable(role)));
     }
 }
