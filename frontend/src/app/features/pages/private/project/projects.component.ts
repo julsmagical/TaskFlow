@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectCardComponent } from './project-card/project-card';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectFormComponent } from './project-form/project-form';
+import { ConfirmDialogComponent } from './project-confirm/project-confirm';
 
 @Component({
   selector: 'app-projects',
@@ -167,9 +168,51 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  deleteProject(project: ProjectResponse): void {}
+  deleteProject(project: ProjectResponse): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '380px',
+      data: {
+        title: 'Eliminar proyecto',
+        message: `¿Seguro que deseas eliminar "${project.name}"? Esta acción no se puede deshacer.`,
+        confirmLabel: 'Eliminar',
+        variant: 'danger',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.projectService.delete(project.id).subscribe(() => {
+        this.projects.update((projects) => projects.filter((p) => p.id !== project.id));
+      });
+    });
+  }
+
+  archiveProject(project: ProjectResponse): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '380px',
+      data: {
+        title: 'Archivar proyecto',
+        message: `"${project.name}" pasará a estado archivado y dejará de aparecer en proyectos activos. Podrás encontrarlo filtrando por estado.`,
+        confirmLabel: 'Archivar',
+        variant: 'neutral',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.projectService.archive(project.id).subscribe((archived) => {
+        this.projects.update((projects) =>
+          projects.map((p) => (p.id === archived.id ? archived : p)),
+        );
+      });
+    });
+  }
 
   createTask(project: ProjectResponse): void {}
-
-  archiveProject(project: ProjectResponse): void {}
 }

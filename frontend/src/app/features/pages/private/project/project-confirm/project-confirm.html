@@ -1,0 +1,19 @@
+<div class="confirm-dialog" [class.danger]="variant === 'danger'">
+  <div class="confirm-icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+
+  <h2>{{ data.title }}</h2>
+
+  <p>{{ data.message }}</p>
+
+  <div class="actions">
+    <button mat-button (click)="cancel()">
+      {{ data.cancelLabel ?? 'Cancelar' }}
+    </button>
+
+    <button mat-flat-button [color]="variant === 'danger' ? 'warn' : undefined" (click)="confirm()">
+      {{ data.confirmLabel ?? 'Aceptar' }}
+    </button>
+  </div>
+</div>
