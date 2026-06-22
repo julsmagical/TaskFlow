@@ -15,11 +15,7 @@ import { computed } from '@angular/core';
 import { TaskService } from '../../../../services/private/task.service';
 import { UserService } from '../../../../services/private/user.service';
 import { SessionStore } from '../../../../services/auth/session-store.service';
-import {
-  TaskResponse,
-  TaskRequest,
-  TaskStatusRequest,
-} from '../../../../interfaces/private/task.interface';
+import {TaskResponse, TaskRequest, TaskStatusRequest } from '../../../../interfaces/private/task.interface';
 import { SelectableUser } from '../../../../interfaces/public/user.interface';
 import { TaskStatus, TaskPriority } from '../../../../../shared/enums/task';
 import { signal } from '@angular/core';
@@ -32,17 +28,7 @@ export interface TaskFormData {
 @Component({
   selector: 'app-task-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [CommonModule, MatButtonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatProgressSpinnerModule],
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
@@ -65,6 +51,17 @@ export class TaskFormComponent implements OnInit {
   readonly isDeveloper = computed(
     () => !this.sessionStore.isAdmin() && !this.sessionStore.isLeader(),
   );
+  
+  readonly currentStatus = this.data.task?.status ?? null;
+  readonly devCanAdvance = computed(
+    () => this.isDeveloper() && this.currentStatus === TaskStatus.EN_PROGRESO,
+  );
+  readonly devIsBlocked = computed(
+    () =>
+      this.isDeveloper() &&
+      (this.currentStatus === TaskStatus.EN_REVISION || this.currentStatus === TaskStatus.COMPLETADA),
+  );
+  readonly managerStatuses = [TaskStatus.EN_PROGRESO, TaskStatus.COMPLETADA];
 
   //para admin/lider
   readonly form = this.fb.group({
@@ -79,25 +76,8 @@ export class TaskFormComponent implements OnInit {
       Validators.required,
     ],
     assignedUserId: [this.data.task?.assignedUserID ?? null],
+    status: [this.data.task?.status ?? null],
   });
-
-  //desarrolladores (solo cambiar estado)
-  readonly statusForm = this.fb.group({
-    newStatus: [this.data.task?.status ?? TaskStatus.PENDIENTE, Validators.required],
-  });
-
-  get allowedStatuses(): TaskStatus[] {
-    const current = this.data.task?.status;
-    //pendiente -> en progreso -> en revision -> completada
-    const transitions: Record<string, TaskStatus[]> = {
-      [TaskStatus.PENDIENTE]: [TaskStatus.EN_PROGRESO],
-      [TaskStatus.EN_PROGRESO]: [TaskStatus.EN_REVISION],
-      [TaskStatus.EN_REVISION]: [TaskStatus.COMPLETADA],
-      [TaskStatus.COMPLETADA]: [],
-    };
-    const next = current ? (transitions[current] ?? []) : [];
-    return current ? [current, ...next] : Object.values(TaskStatus);
-  }
 
   ngOnInit(): void {
     if (!this.isDeveloper()) {
@@ -109,21 +89,29 @@ export class TaskFormComponent implements OnInit {
     return dateStr ? dateStr.substring(0, 10) : '';
   }
 
-  save(): void {
-    if (this.isDeveloper()) {
-      this.saveStatus();
-    } else {
-      this.saveTask();
-    }
+  advanceStatus(): void {
+    if (!this.data.task) return;
+    this.saving.set(true);
+    this.taskService
+      .updateStatus(this.data.task.id, { newStatus: TaskStatus.EN_REVISION } as any)
+      .subscribe({
+        next: (task) => {this.saving.set(false); this.dialogRef.close(task);},
+        error: (err) => {
+          this.saving.set(false);
+          const msg = err?.error?.message ?? 'No se pudo actualizar el estado';
+          this.snackBar.open(msg, 'Cerrar', { duration: 4000 });
+        },
+      });
   }
 
-  private saveTask(): void {
+  saveTask(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.saving.set(true);
     const v = this.form.getRawValue();
+
     const request: TaskRequest = {
       title: v.title!,
       description: v.description || null,
@@ -138,30 +126,25 @@ export class TaskFormComponent implements OnInit {
 
     op$.subscribe({
       next: (task) => {
-        this.saving.set(false);
-        this.dialogRef.close(task);
+        const newStatus = v.status as TaskStatus | null;
+        if (this.isEdit && newStatus && newStatus !== this.currentStatus) {
+          this.taskService.updateStatus(task.id, { newStatus } as any).subscribe({
+            next: (updated) => {this.saving.set(false); this.dialogRef.close(updated);},
+            error: (err) => {
+              this.saving.set(false);
+              const msg = err?.error?.message ?? 'Tarea guardada, pero no se pudo cambiar el estado';
+              this.snackBar.open(msg, 'Cerrar', { duration: 4000 });
+              this.dialogRef.close(task);
+            },
+          });
+        } else {
+          this.saving.set(false);
+          this.dialogRef.close(task);
+        }
       },
       error: (err) => {
         this.saving.set(false);
         const msg = err?.error?.message ?? 'Error al guardar la tarea';
-        this.snackBar.open(msg, 'Cerrar', { duration: 4000 });
-      },
-    });
-  }
-
-  private saveStatus(): void {
-    if (this.statusForm.invalid || !this.data.task) return;
-    this.saving.set(true);
-    const req: TaskStatusRequest = { newStatus: this.statusForm.value.newStatus as TaskStatus };
-
-    this.taskService.updateStatus(this.data.task.id, req as any).subscribe({
-      next: (task) => {
-        this.saving.set(false);
-        this.dialogRef.close(task);
-      },
-      error: (err) => {
-        this.saving.set(false);
-        const msg = err?.error?.message ?? 'Transición de estado no permitida';
         this.snackBar.open(msg, 'Cerrar', { duration: 4000 });
       },
     });
