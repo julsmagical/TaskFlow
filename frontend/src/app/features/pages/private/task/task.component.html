@@ -5,7 +5,7 @@
       <span>Tareas pendientes</span>
     </div>
 
-    <p class="pending-greeting"> {{ sessionStore.userName() }}, estas son tus pendientes: </p>
+    <p class="pending-greeting">{{ sessionStore.userName() }}, estas son tus pendientes:</p>
 
     @if (myPendingTasks().length === 0) {
       <p class="pending-empty">Sin tareas pendientes</p>
@@ -22,7 +22,7 @@
   </aside>
 
   <main class="tasks-main">
-    <div class="main-header"> <h1>Tareas</h1> </div>
+    <div class="main-header"><h1>Tareas</h1></div>
 
     <div class="filters">
       <mat-form-field appearance="outline">
@@ -37,7 +37,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Estado</mat-label>
-        <mat-select [value]="selectedStatus()" (valueChange)="selectedStatus.set($event); onFilterChange()">
+        <mat-select
+          [value]="selectedStatus()"
+          (valueChange)="selectedStatus.set($event); onFilterChange()"
+        >
           <mat-option [value]="null">Todos</mat-option>
           <mat-option value="PENDIENTE">Pendiente</mat-option>
           <mat-option value="EN_PROGRESO">En progreso</mat-option>
@@ -48,7 +51,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Prioridad</mat-label>
-        <mat-select [value]="selectedPriority()" (valueChange)="selectedPriority.set($event); onFilterChange()">
+        <mat-select
+          [value]="selectedPriority()"
+          (valueChange)="selectedPriority.set($event); onFilterChange()"
+        >
           <mat-option [value]="null">Todas</mat-option>
           <mat-option value="ALTO">Alta</mat-option>
           <mat-option value="MEDIO">Media</mat-option>
@@ -69,9 +75,14 @@
               <span class="project-name">{{ project.name }}</span>
               <div class="project-actions">
                 @if (canManage(project)) {
-                  <button mat-stroked-button class="add-task-btn"
-                    (click)="$event.stopPropagation(); openCreateTask(project)" matTooltip="Añadir tarea">
-                    <mat-icon>add</mat-icon> Añadir tarea </button>
+                  <button
+                    mat-stroked-button
+                    class="add-task-btn"
+                    (click)="$event.stopPropagation(); openCreateTask(project)"
+                    matTooltip="Añadir tarea"
+                  >
+                    <mat-icon>add</mat-icon> Añadir tarea
+                  </button>
                 }
               </div>
             </div>
@@ -79,18 +90,24 @@
 
           <div class="task-list">
             @for (task of getTasks(project.id); track task.id) {
-              <div class="task-row" [ngClass]="{
+              <div
+                class="task-row"
+                [ngClass]="{
                   'task-done': task.status === TaskStatus.COMPLETADA,
                   'task-overdue': isOverdue(task.dueDate) && task.status !== TaskStatus.COMPLETADA,
-                }">
+                }"
+              >
                 <div class="task-info">
                   <span class="task-title">{{ task.title }}</span>
                   <div class="task-meta">
                     <span class="chip priority-chip" [ngClass]="task.priority.toLowerCase()">
                       {{ taskPriorityLabels[task.priority] }}
                     </span>
-                    <span class="chip status-chip" [ngClass]="task.status.toLowerCase()"
-                      [class.completada-chip]="task.status === TaskStatus.COMPLETADA">
+                    <span
+                      class="chip status-chip"
+                      [ngClass]="task.status.toLowerCase()"
+                      [class.completada-chip]="task.status === TaskStatus.COMPLETADA"
+                    >
                       {{ taskStatusLabels[task.status] | titlecase }}
                     </span>
                     @if (task.assignedUsername) {
@@ -98,8 +115,13 @@
                         <mat-icon>person</mat-icon>{{ task.assignedUsername }}
                       </span>
                     }
-                    <span class="due-date" [class.overdue]="isOverdue(task.dueDate) && task.status !== TaskStatus.COMPLETADA"
-                      [class.due-soon]="isDueSoon(task.dueDate)" >
+                    <span
+                      class="due-date"
+                      [class.overdue]="
+                        isOverdue(task.dueDate) && task.status !== TaskStatus.COMPLETADA
+                      "
+                      [class.due-soon]="isDueSoon(task.dueDate)"
+                    >
                       <mat-icon>event</mat-icon>
                       {{ task.dueDate | date: 'dd/MM/yyyy' }}
                     </span>
@@ -112,11 +134,24 @@
                   </button>
 
                   @if (canManage(project)) {
-                    <button mat-icon-button matTooltip="Editar" (click)="openEditTask(task, project)">
-                      <mat-icon class="edit-icon">edit</mat-icon>
-                    </button>
-
-                    <button mat-icon-button matTooltip="Eliminar" (click)="deleteTask(task, project)">
+                    @if (TaskStatus.COMPLETADA) {
+                      <button mat-icon-button matTooltip="Editar" disabled>
+                        <mat-icon class="edit-icon">edit</mat-icon>
+                      </button>
+                    } @else {
+                      <button
+                        mat-icon-button
+                        matTooltip="Editar"
+                        (click)="openEditTask(task, project)"
+                      >
+                        <mat-icon class="edit-icon">edit</mat-icon>
+                      </button>
+                    }
+                    <button
+                      mat-icon-button
+                      matTooltip="Eliminar"
+                      (click)="deleteTask(task, project)"
+                    >
                       <mat-icon color="warn">delete</mat-icon>
                     </button>
                   }
