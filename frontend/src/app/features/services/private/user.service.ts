@@ -35,4 +35,10 @@ export class UserService {
       .post<ApiResponse<SelectableUser>>(this.apiUrl, request)
       .pipe(map((response) => response.data));
   }
+
+  findById(id: string): Observable<SelectableUser> {
+    return this.http
+      .get<ApiResponse<SelectableUser>>(`${this.apiUrl}/${id}`)
+      .pipe(map((response) => response.data));
+  }
 }
