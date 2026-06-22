@@ -31,6 +31,18 @@ public class DataInitializer {
                 admin.setRole(adminRole);
                 userRepository.save(admin);
             }
+            if (!userRepository.existsByUsername(UserConstants.DEFAULT_LIDER_USERNAME)) {
+                Role userRole = roleRepository.findByName(RoleName.LIDER.name()).orElseThrow();
+                User user = new User();
+                user.setUsername(UserConstants.DEFAULT_LIDER_USERNAME);
+                user.setFullName(UserConstants.DEFAULT_LIDER_FULLNAME);
+                user.setEmail(UserConstants.DEFAULT_LIDER_EMAIL);
+                user.setPasswordHash(
+                    passwordEncoder.encode(UserConstants.DEFAULT_LIDER_PASSWORD)
+                );
+                user.setRole(userRole);
+                userRepository.save(user);
+            }
             if (!userRepository.existsByUsername(UserConstants.DEFAULT_DESARROLLADOR_USERNAME)) {
                 Role userRole = roleRepository.findByName(RoleName.DESARROLLADOR.name()).orElseThrow();
                 User user = new User();
