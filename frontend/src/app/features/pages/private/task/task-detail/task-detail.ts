@@ -22,7 +22,16 @@ import { TaskFormComponent } from '../task-form/task-form';
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, NgClass, MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule],
+  imports: [
+    CommonModule,
+    NgClass,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+  ],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.scss',
 })
@@ -72,6 +81,7 @@ export class TaskDetailComponent implements OnInit {
   }
 
   openEdit(): void {
+    console.log('openEdit');
     const task = this.task();
     const project = this.project();
     if (!task || !project) return;
