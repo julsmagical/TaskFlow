@@ -1,0 +1,119 @@
+<div class="user-form">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>person_add</mat-icon>
+    </div>
+
+    <div class="header-text">
+      <h2>Nuevo usuario</h2>
+      <p class="subtitle">Completa la información para crear un nuevo usuario del sistema.</p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre completo</mat-label>
+
+        <input matInput formControlName="fullname" />
+
+        @if (
+          form.controls.fullname.hasError('required') &&
+          (form.controls.fullname.touched || submitted())
+        ) {
+          <mat-error>El nombre es obligatorio.</mat-error>
+        }
+
+        @if (form.controls.fullname.hasError('minlength')) {
+          <mat-error>Mínimo 3 caracteres.</mat-error>
+        }
+
+        @if (form.controls.fullname.hasError('maxlength')) {
+          <mat-error>Máximo 100 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de usuario</mat-label>
+
+        <input matInput formControlName="username" />
+
+        @if (
+          form.controls.username.hasError('required') &&
+          (form.controls.username.touched || submitted())
+        ) {
+          <mat-error>El usuario es obligatorio.</mat-error>
+        }
+
+        @if (form.controls.username.hasError('minlength')) {
+          <mat-error>Mínimo 3 caracteres.</mat-error>
+        }
+
+        @if (form.controls.username.hasError('maxlength')) {
+          <mat-error>Máximo 30 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+
+        <input matInput type="email" formControlName="email" />
+
+        @if (
+          form.controls.email.hasError('required') && (form.controls.email.touched || submitted())
+        ) {
+          <mat-error>El correo es obligatorio.</mat-error>
+        }
+
+        @if (form.controls.email.hasError('email')) {
+          <mat-error>Correo electrónico inválido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+
+        <input matInput type="password" formControlName="password" />
+
+        @if (
+          form.controls.password.hasError('required') &&
+          (form.controls.password.touched || submitted())
+        ) {
+          <mat-error>La contraseña es obligatoria.</mat-error>
+        }
+
+        @if (form.controls.password.hasError('minlength')) {
+          <mat-error>Mínimo 8 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rol</mat-label>
+
+        <mat-select formControlName="role">
+          @for (role of roles; track role) {
+            <mat-option [value]="role">
+              {{ roleLabels[role] }}
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (form.controls.role.hasError('required')) {
+          <mat-error>Selecciona un rol.</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="btn-ghost">Cancelar</button>
+
+    <button mat-flat-button color="primary" [disabled]="loading()" (click)="submit()">
+      @if (loading()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        Crear usuario
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

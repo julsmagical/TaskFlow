@@ -15,6 +15,14 @@ export interface User {
   createdAt: String;
 }
 
+export interface UserRequest {
+  username: String;
+  fullname: String;
+  email: String;
+  password: String;
+  role: UserRole;
+}
+
 export interface AuthenticatedUser {
   id: string;
   username: string;

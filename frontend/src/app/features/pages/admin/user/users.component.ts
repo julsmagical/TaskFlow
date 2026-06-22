@@ -13,6 +13,7 @@ import { UserService } from '../../../services/private/user.service';
 import { UserRole } from '../../../../shared/enums/user';
 import { SelectableUser } from '../../../interfaces/public/user.interface';
 import { UserCardComponent } from './user-card/user-card';
+import { UserFormComponent } from './user-form/user-form';
 
 interface RoleGroup {
   role: UserRole;
@@ -92,6 +93,17 @@ export class UsersComponent implements OnInit {
   }
 
   createUser(): void {
-    // se conecta cuando armemos el dialog de creación de usuario
+    const dialogRef = this.dialog.open(UserFormComponent, {
+      width: '600px',
+      maxWidth: '95vw',
+    });
+
+    dialogRef.afterClosed().subscribe((created) => {
+      if (!created) {
+        return;
+      }
+
+      this.users.update((users) => [created, ...users]);
+    });
   }
 }

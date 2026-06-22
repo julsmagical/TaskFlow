@@ -5,7 +5,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environment/environment';
 import { ApiResponse } from '../../interfaces/private/api-response.interface';
 import { UserRole } from '../../../shared/enums/user';
-import { SelectableUser } from '../../interfaces/public/user.interface';
+import { SelectableUser, UserRequest } from '../../interfaces/public/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,5 +28,11 @@ export class UserService {
 
   findDevelopers(): Observable<SelectableUser[]> {
     return this.findAll(UserRole.DESARROLLADOR);
+  }
+
+  create(request: UserRequest): Observable<SelectableUser> {
+    return this.http
+      .post<ApiResponse<SelectableUser>>(this.apiUrl, request)
+      .pipe(map((response) => response.data));
   }
 }
