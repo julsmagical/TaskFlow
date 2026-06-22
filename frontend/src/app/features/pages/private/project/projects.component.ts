@@ -23,6 +23,7 @@ import { ProjectCardComponent } from './project-card/project-card';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectFormComponent } from './project-form/project-form';
 import { ConfirmDialogComponent } from './project-confirm/project-confirm';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-projects',
@@ -52,6 +53,7 @@ export class ProjectsComponent implements OnInit {
   readonly sessionStore = inject(SessionStore);
 
   private readonly dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   readonly projects = signal<ProjectResponse[]>([]);
   readonly loading = signal(false);
@@ -206,10 +208,21 @@ export class ProjectsComponent implements OnInit {
         return;
       }
 
-      this.projectService.archive(project.id).subscribe((archived) => {
-        this.projects.update((projects) =>
-          projects.map((p) => (p.id === archived.id ? archived : p)),
-        );
+      this.projectService.archive(project.id).subscribe({
+        next: (archived) => {
+          this.projects.update((projects) =>
+            projects.map((p) => (p.id === archived.id ? archived : p)),
+          );
+        },
+        error: (err) => {
+          this.snackBar.open(
+            err.error?.message ?? 'Ocurrió un error al archivar el proyecto.',
+            'Cerrar',
+            {
+              duration: 5000,
+            },
+          );
+        },
       });
     });
   }
