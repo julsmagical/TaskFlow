@@ -36,12 +36,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
             }
           },
           "response": []
@@ -63,12 +59,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
             }
           },
           "response": []
@@ -108,13 +100,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
             }
           },
           "response": []
@@ -136,13 +123,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "me"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
             }
           },
           "response": []
@@ -178,12 +160,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/projects",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "projects"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
             }
           },
           "response": []
@@ -217,12 +195,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/projects",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "projects"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
             }
           },
           "response": []
@@ -244,13 +218,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/projects/d5fc45de-880d-4415-92c1-fbbe6ffe4679",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "projects",
-                "d5fc45de-880d-4415-92c1-fbbe6ffe4679"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "d5fc45de-880d-4415-92c1-fbbe6ffe4679"]
             }
           },
           "response": []
@@ -281,13 +250,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/projects/d5fc45de-880d-4415-92c1-fbbe6ffe4679",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "projects",
-                "d5fc45de-880d-4415-92c1-fbbe6ffe4679"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "d5fc45de-880d-4415-92c1-fbbe6ffe4679"]
             }
           },
           "response": []
@@ -309,13 +273,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/projects/d5fc45de-880d-4415-92c1-fbbe6ffe4679",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "projects",
-                "d5fc45de-880d-4415-92c1-fbbe6ffe4679"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "d5fc45de-880d-4415-92c1-fbbe6ffe4679"]
             }
           },
           "response": []
@@ -337,14 +296,301 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/projects/1725dfa4-53e0-489d-b752-6ff4835505ca/archive",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "projects",
                 "1725dfa4-53e0-489d-b752-6ff4835505ca",
                 "archive"
               ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Task",
+      "item": [
+        {
+          "name": "Crear Tarea",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Prueba 2 Diseñar base de datos\",\r\n  \"description\": \"Crear tablas iniciales del sistema TaskFlow\",\r\n  \"priority\": \"ALTO\",\r\n  \"dueDate\": \"2026-06-30\",\r\n  \"assignedUserId\": \"106D3A9F-47E8-47D1-BE92-3A5D345D1E52\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/BFD46CDD-4EEA-4504-BA04-25FD9E0939CA/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "projects",
+                "BFD46CDD-4EEA-4504-BA04-25FD9E0939CA",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar sin filtros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/5508E983-0FCC-4E2B-838F-124A54309A28/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "projects",
+                "5508E983-0FCC-4E2B-838F-124A54309A28",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por estado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/BFD46CDD-4EEA-4504-BA04-25FD9E0939CA/tasks?estado=PENDIENTE",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "projects",
+                "BFD46CDD-4EEA-4504-BA04-25FD9E0939CA",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "PENDIENTE"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por prioridad",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/E387AC55-CFCA-45BE-969D-2F601BD6EB24/tasks?prioridad=ALTO",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "projects",
+                "E387AC55-CFCA-45BE-969D-2F601BD6EB24",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "prioridad",
+                  "value": "ALTO"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por los dos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/E387AC55-CFCA-45BE-969D-2F601BD6EB24/tasks?estado=PENDIENTE&prioridad=ALTO",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "projects",
+                "E387AC55-CFCA-45BE-969D-2F601BD6EB24",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "PENDIENTE"
+                },
+                {
+                  "key": "prioridad",
+                  "value": "ALTO"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener por id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/D2948BD8-CD05-4285-8AA9-FA694BBE9361",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "D2948BD8-CD05-4285-8AA9-FA694BBE9361"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Prueba 2 Diseñar base de datos\",\r\n  \"description\": \"Agregar relaciones y normalización\",\r\n  \"priority\": \"MEDIO\",\r\n  \"dueDate\": \"2026-07-15\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/459DE284-456D-46BF-8312-7CEDF297366C",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "459DE284-456D-46BF-8312-7CEDF297366C"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newStatus\": \"COMPLETADA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/459DE284-456D-46BF-8312-7CEDF297366C/status",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "tasks",
+                "459DE284-456D-46BF-8312-7CEDF297366C",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Implementar Login JWT v2\",\r\n    \"description\": \"Agregar refresh token\",\r\n    \"priority\": \"MEDIA\",\r\n    \"dueDate\": \"2026-07-15\",\r\n    \"assignedUserId\": \"D276CFBE-4D87-4D98-92B7-A0DCEC126CB0\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/ea9918db-04a1-4276-845c-b419e2257e3d",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "ea9918db-04a1-4276-845c-b419e2257e3d"]
             }
           },
           "response": []
