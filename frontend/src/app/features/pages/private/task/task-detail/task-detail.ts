@@ -22,16 +22,7 @@ import { TaskFormComponent } from '../task-form/task-form';
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgClass,
-    MatButtonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
-  ],
+  imports: [CommonModule, NgClass, MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.scss',
 })

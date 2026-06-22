@@ -67,6 +67,7 @@ public class TaskService {
         task.setProject(project);
         task.setAssignedUser(assignedUser);
 
+        task.setStatus(assignedUser != null ? TaskStatus.EN_PROGRESO : TaskStatus.PENDIENTE);
         taskRepository.save(task);
         return ApiResponse.success(TaskResponse.from(task), "Tarea creada exitosamente.");
     }
@@ -115,6 +116,12 @@ public class TaskService {
         task.setDueDate(request.dueDate());
         task.setAssignedUser(assignedUser);
 
+        if (assignedUser != null && task.getStatus() == TaskStatus.PENDIENTE) {
+            task.setStatus(TaskStatus.EN_PROGRESO);
+        } else if (assignedUser == null && task.getStatus() == TaskStatus.EN_PROGRESO) {
+            task.setStatus(TaskStatus.PENDIENTE);
+        }
+        
         taskRepository.save(task);
         return ApiResponse.success(TaskResponse.from(task), "Tarea actualizada exitosamente.");
     }

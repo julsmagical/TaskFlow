@@ -1,25 +1,34 @@
-<h2 mat-dialog-title>
-  {{ isDeveloper() ? 'Cambiar estado' : isEdit ? 'Editar tarea' : 'Nueva tarea' }}
-</h2>
+<h2 mat-dialog-title> {{ isEdit ? 'Editar tarea' : 'Nueva tarea' }} </h2>
 
 <mat-dialog-content>
   @if (isDeveloper()) {
-    <form [formGroup]="statusForm">
-      <p class="dev-note">
-        <mat-icon>info</mat-icon> Como desarrollador solo puedes actualizar el estado de la tarea.
-      </p>
+    @if (devIsBlocked()) {
+      <div class="status-message">
+        <mat-icon class="status-icon">check_circle</mat-icon>
+        <div>
+          <strong>Tarea enviada a revisión</strong>
+          <p>Tus cambios serán revisados por el líder del proyecto. Ya no puedes modificar el estado.</p>
+        </div>
+      </div>
+    } @else if (devCanAdvance()) {
+      <div class="status-message advance"> <!-- puede pasar a EN_REVISION -->
+        <mat-icon class="status-icon">send</mat-icon>
+        <div>
+          <strong>¿Listo para revisión?</strong>
+          <p>Al confirmar, la tarea pasará a <strong>En revisión</strong> y el líder podrá evaluarla.</p>
+        </div>
+      </div>
+    } @else {
+      <div class="status-message"><!-- PENDIENTE -->
+        <mat-icon class="status-icon">hourglass_empty</mat-icon>
+        <div>
+          <strong>Tarea pendiente</strong>
+          <p>Esta tarea aún no ha comenzado. El estado cambiará automáticamente al ser asignada.</p>
+        </div>
+      </div>
+    }
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="newStatus">
-          @for (status of allowedStatuses; track status) {
-            <mat-option [value]="status">{{ status | titlecase }}</mat-option>
-          }
-        </mat-select>
-        <mat-error>Selecciona un estado</mat-error>
-      </mat-form-field>
-    </form>
-  } @else {
+  } @else { <!-- Admin/Lider -->
     <form [formGroup]="form">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Título *</mat-label>
@@ -37,12 +46,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
-        <textarea
-          matInput
-          formControlName="description"
-          rows="3"
-          placeholder="Descripción opcional"
-        ></textarea>
+        <textarea matInput formControlName="description" rows="3" placeholder="Descripción opcional"></textarea>
       </mat-form-field>
 
       <div class="row-2">
@@ -72,17 +76,44 @@
           }
         </mat-select>
       </mat-form-field>
+
+      @if (isEdit && currentStatus !== TaskStatus.PENDIENTE) {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status">
+            @for (s of managerStatuses; track s) {
+              <mat-option [value]="s">
+                {{ s === TaskStatus.EN_PROGRESO ? 'En progreso' : 'Completada' }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-hint>Solo puedes pasar a "En progreso" o "Completada"</mat-hint>
+        </mat-form-field>
+      }
     </form>
   }
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="cancel()" [disabled]="saving()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
-    @if (saving()) {
-      <mat-spinner diameter="18"></mat-spinner>
-    } @else {
-      {{ isDeveloper() ? 'Actualizar estado' : isEdit ? 'Guardar cambios' : 'Crear tarea' }}
+  @if (isDeveloper()) {
+    @if (devCanAdvance()) {
+      <button mat-flat-button color="primary" (click)="advanceStatus()" [disabled]="saving()">
+        @if (saving()) {
+          <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+          Enviar a revisión
+        }
+      </button>
     }
-  </button>
+  } @else {
+    <button mat-flat-button color="primary" (click)="saveTask()" [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        {{ isEdit ? 'Guardar cambios' : 'Crear tarea' }}
+      }
+    </button>
+  }
 </mat-dialog-actions>
