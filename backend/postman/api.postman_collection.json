@@ -27,13 +27,40 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"develop\",\r\n    \"password\": \"password1234\",\r\n    \"email\": \"developer@gmail.com\",\r\n    \"fullname\": \"Developer\",\r\n    \"roleId\": \"BD0EDE1E-5B02-45A9-A40E-45BE4B08DB98\"\r\n}",
+              "raw": "{\r\n    \"username\": \"leader\",\r\n    \"password\": \"password1234\",\r\n    \"email\": \"leader@gmail.com\",\r\n    \"fullname\": \"Leader\",\r\n    \"roleId\": \"65B2EC89-E362-40B5-9D5D-335CB71319BD\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/users",
               "host": [
@@ -91,6 +118,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -114,7 +169,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"Un proyecto mas\",\r\n    \"description\": \"no se que poner acá\"\r\n}",
+              "raw": "{\r\n    \"name\": \"Proyecto 2\",\r\n    \"description\": \"No description\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -268,8 +323,29 @@
         {
           "name": "archive",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/1725dfa4-53e0-489d-b752-6ff4835505ca/archive",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "1725dfa4-53e0-489d-b752-6ff4835505ca",
+                "archive"
+              ]
+            }
           },
           "response": []
         }
