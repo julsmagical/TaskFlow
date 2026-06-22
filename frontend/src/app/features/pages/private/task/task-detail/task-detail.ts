@@ -18,11 +18,21 @@ import { TaskResponse } from '../../../../interfaces/private/task.interface';
 import { ProjectResponse } from '../../../../interfaces/private/project.interface';
 import { TaskStatus, TaskPriority } from '../../../../../shared/enums/task';
 import { TaskFormComponent } from '../task-form/task-form';
+import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../../shared/constants/task';
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, NgClass, MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule],
+  imports: [
+    CommonModule,
+    NgClass,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+  ],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.scss',
 })
@@ -34,6 +44,10 @@ export class TaskDetailComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   readonly sessionStore = inject(SessionStore);
+
+  //mapear constants
+  readonly taskStatusLabels = TASK_STATUS_LABELS;
+  readonly taskPriorityLabels = TASK_PRIORITY_LABELS;
 
   readonly TaskStatus = TaskStatus;
   readonly TaskPriority = TaskPriority;

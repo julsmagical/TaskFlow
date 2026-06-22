@@ -71,7 +71,7 @@
                 @if (canManage(project)) {
                   <button mat-stroked-button class="add-task-btn"
                     (click)="$event.stopPropagation(); openCreateTask(project)" matTooltip="Añadir tarea">
-                    <mat-icon>add</mat-icon> Add task </button>
+                    <mat-icon>add</mat-icon> Añadir tarea </button>
                 }
               </div>
             </div>
@@ -87,11 +87,11 @@
                   <span class="task-title">{{ task.title }}</span>
                   <div class="task-meta">
                     <span class="chip priority-chip" [ngClass]="task.priority.toLowerCase()">
-                      {{ task.priority }}
+                      {{ taskPriorityLabels[task.priority] }}
                     </span>
                     <span class="chip status-chip" [ngClass]="task.status.toLowerCase()"
                       [class.completada-chip]="task.status === TaskStatus.COMPLETADA">
-                      {{ task.status | titlecase }}
+                      {{ taskStatusLabels[task.status] | titlecase }}
                     </span>
                     @if (task.assignedUsername) {
                       <span class="assigned-user">

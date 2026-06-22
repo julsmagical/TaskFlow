@@ -4,7 +4,9 @@
   </div>
 } @else if (task()) {
   <div class="detail-container">
-    <button mat-button class="back-btn" (click)="goBack()"> <mat-icon>arrow_back</mat-icon> Volver a tareas </button>
+    <button mat-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Volver a tareas
+    </button>
 
     <mat-card class="detail-card">
       <mat-card-header>
@@ -13,16 +15,19 @@
             <h1 class="task-title">{{ task()!.title }}</h1>
             <div class="chips-row">
               <span class="chip priority-chip" [ngClass]="task()!.priority.toLowerCase()">
-                <mat-icon>flag</mat-icon> {{ task()!.priority }} </span>
+                <mat-icon>flag</mat-icon> {{ taskPriorityLabels[task()!.priority] }}
+              </span>
               <span class="chip status-chip" [ngClass]="task()!.status.toLowerCase()">
-                {{ task()!.status | titlecase }}
+                {{ taskStatusLabels[task()!.status] | titlecase }}
               </span>
             </div>
           </div>
 
           <div class="header-actions">
             @if (canManage()) {
-              <button mat-stroked-button (click)="openEdit()"> <mat-icon>edit</mat-icon> Editar </button>
+              <button mat-stroked-button (click)="openEdit()">
+                <mat-icon>edit</mat-icon> Editar
+              </button>
             }
             @if (isDeveloper()) {
               <button mat-stroked-button color="primary" (click)="openEdit()">
@@ -39,7 +44,7 @@
       <mat-card-content class="detail-content">
         <section class="detail-section">
           <h3 class="section-label">Descripción</h3>
-          <p class="description"> {{ task()!.description || 'Sin descripción' }} </p>
+          <p class="description">{{ task()!.description || 'Sin descripción' }}</p>
         </section>
 
         <mat-divider></mat-divider>
@@ -57,9 +62,13 @@
 
           <div class="meta-item">
             <span class="meta-label"> <mat-icon>event</mat-icon>Fecha límite </span>
-            <span class="meta-value"
-              [class.overdue]="isOverdue(task()!.dueDate) && task()!.status !== TaskStatus.COMPLETADA"
-              [class.due-soon]="isDueSoon(task()!.dueDate)" >
+            <span
+              class="meta-value"
+              [class.overdue]="
+                isOverdue(task()!.dueDate) && task()!.status !== TaskStatus.COMPLETADA
+              "
+              [class.due-soon]="isDueSoon(task()!.dueDate)"
+            >
               {{ task()!.dueDate | date: 'dd/MM/yyyy' }}
               @if (isOverdue(task()!.dueDate) && task()!.status !== TaskStatus.COMPLETADA) {
                 <span class="overdue-badge">Vencida</span>
@@ -70,16 +79,12 @@
           </div>
 
           <div class="meta-item">
-            <span class="meta-label">
-              <mat-icon>schedule</mat-icon>Creada
-            </span>
+            <span class="meta-label"> <mat-icon>schedule</mat-icon>Creada </span>
             <span class="meta-value">{{ task()!.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
           </div>
 
           <div class="meta-item">
-            <span class="meta-label">
-              <mat-icon>update</mat-icon>Actualizada
-            </span>
+            <span class="meta-label"> <mat-icon>update</mat-icon>Actualizada </span>
             <span class="meta-value">{{ task()!.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
           </div>
         </section>

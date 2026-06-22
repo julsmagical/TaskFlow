@@ -24,6 +24,7 @@ import { ProjectResponse } from '../../../interfaces/private/project.interface';
 import { TaskStatus, TaskPriority } from '../../../../shared/enums/task';
 import { TaskFormComponent } from './task-form/task-form';
 import { MatDividerModule } from '@angular/material/divider';
+import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../shared/constants/task';
 
 @Component({
   selector: 'app-tasks',
@@ -40,6 +41,10 @@ export class TasksComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   readonly sessionStore = inject(SessionStore);
+
+  //mapear constants
+  readonly taskStatusLabels = TASK_STATUS_LABELS;
+  readonly taskPriorityLabels = TASK_PRIORITY_LABELS; 
 
   readonly TaskStatus = TaskStatus;
   readonly TaskPriority = TaskPriority;

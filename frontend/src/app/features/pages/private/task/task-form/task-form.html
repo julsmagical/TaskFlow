@@ -1,119 +1,165 @@
-<h2 mat-dialog-title> {{ isEdit ? 'Editar tarea' : 'Nueva tarea' }} </h2>
+<div class="task-form">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>{{ isEdit ? 'edit_note' : 'task_alt' }}</mat-icon>
+    </div>
 
-<mat-dialog-content>
-  @if (isDeveloper()) {
-    @if (devIsBlocked()) {
-      <div class="status-message">
-        <mat-icon class="status-icon">check_circle</mat-icon>
-        <div>
-          <strong>Tarea enviada a revisión</strong>
-          <p>Tus cambios serán revisados por el líder del proyecto. Ya no puedes modificar el estado.</p>
+    <div class="header-text">
+      <h2>{{ isEdit ? 'Editar tarea' : 'Nueva tarea' }}</h2>
+
+      <p class="subtitle">
+        {{
+          isEdit
+            ? 'Actualiza la información de la tarea.'
+            : 'Define los datos principales y asigna un responsable.'
+        }}
+      </p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    @if (isDeveloper()) {
+      @if (devIsBlocked()) {
+        <div class="status-message">
+          <mat-icon class="status-icon">check_circle</mat-icon>
+          <div>
+            <strong>Tarea enviada a revisión</strong>
+            <p>
+              Tus cambios serán revisados por el líder del proyecto. Ya no puedes modificar el
+              estado.
+            </p>
+          </div>
         </div>
-      </div>
-    } @else if (devCanAdvance()) {
-      <div class="status-message advance"> <!-- puede pasar a EN_REVISION -->
-        <mat-icon class="status-icon">send</mat-icon>
-        <div>
-          <strong>¿Listo para revisión?</strong>
-          <p>Al confirmar, la tarea pasará a <strong>En revisión</strong> y el líder podrá evaluarla.</p>
+      } @else if (devCanAdvance()) {
+        <div class="status-message advance">
+          <mat-icon class="status-icon">send</mat-icon>
+          <div>
+            <strong>¿Listo para revisión?</strong>
+            <p>
+              Al confirmar, la tarea pasará a <strong>En revisión</strong> y el líder podrá
+              evaluarla.
+            </p>
+          </div>
         </div>
-      </div>
+      } @else {
+        <div class="status-message">
+          <mat-icon class="status-icon">hourglass_empty</mat-icon>
+          <div>
+            <strong>Tarea pendiente</strong>
+            <p>
+              Esta tarea aún no ha comenzado. El estado cambiará automáticamente al ser asignada.
+            </p>
+          </div>
+        </div>
+      }
     } @else {
-      <div class="status-message"><!-- PENDIENTE -->
-        <mat-icon class="status-icon">hourglass_empty</mat-icon>
-        <div>
-          <strong>Tarea pendiente</strong>
-          <p>Esta tarea aún no ha comenzado. El estado cambiará automáticamente al ser asignada.</p>
-        </div>
-      </div>
-    }
-
-  } @else { <!-- Admin/Lider -->
-    <form [formGroup]="form">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Título *</mat-label>
-        <input matInput formControlName="title" placeholder="Nombre de la tarea" />
-        @if (form.get('title')?.errors?.['required'] && form.get('title')?.touched) {
-          <mat-error>El título es obligatorio</mat-error>
-        }
-        @if (form.get('title')?.errors?.['minlength'] && form.get('title')?.touched) {
-          <mat-error>Mínimo 3 caracteres</mat-error>
-        }
-        @if (form.get('title')?.errors?.['maxlength'] && form.get('title')?.touched) {
-          <mat-error>Máximo 100 caracteres</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descripción</mat-label>
-        <textarea matInput formControlName="description" rows="3" placeholder="Descripción opcional"></textarea>
-      </mat-form-field>
-
-      <div class="row-2">
+      <form [formGroup]="form">
         <mat-form-field appearance="outline">
-          <mat-label>Prioridad *</mat-label>
-          <mat-select formControlName="priority">
-            <mat-option value="ALTO">Alta</mat-option>
-            <mat-option value="MEDIO">Media</mat-option>
-            <mat-option value="BAJO">Baja</mat-option>
-          </mat-select>
-          <mat-error>Selecciona prioridad</mat-error>
-        </mat-form-field>
+          <mat-label>Título</mat-label>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha límite *</mat-label>
-          <input matInput type="date" formControlName="dueDate" />
-          <mat-error>La fecha es obligatoria</mat-error>
-        </mat-form-field>
-      </div>
+          <input matInput formControlName="title" placeholder="Nombre de la tarea" />
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Asignar desarrollador</mat-label>
-        <mat-select formControlName="assignedUserId">
-          <mat-option [value]="null">Sin asignar</mat-option>
-          @for (dev of developers(); track dev.id) {
-            <mat-option [value]="dev.id">{{ dev.fullname }} ({{ dev.username }})</mat-option>
+          @if (form.get('title')?.errors?.['required'] && form.get('title')?.touched) {
+            <mat-error>El título es obligatorio</mat-error>
           }
-        </mat-select>
-      </mat-form-field>
 
-      @if (isEdit && currentStatus !== TaskStatus.PENDIENTE) {
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Estado</mat-label>
-          <mat-select formControlName="status">
-            @for (s of managerStatuses; track s) {
-              <mat-option [value]="s">
-                {{ s === TaskStatus.EN_PROGRESO ? 'En progreso' : 'Completada' }}
-              </mat-option>
+          @if (form.get('title')?.errors?.['minlength'] && form.get('title')?.touched) {
+            <mat-error>Mínimo 3 caracteres</mat-error>
+          }
+
+          @if (form.get('title')?.errors?.['maxlength'] && form.get('title')?.touched) {
+            <mat-error>Máximo 100 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+
+          <textarea
+            maxlength="255"
+            matInput
+            rows="4"
+            formControlName="description"
+            placeholder="Descripción opcional"
+          >
+          </textarea>
+          <mat-hint align="end"> {{ form.controls.description.value?.length ?? 0 }}/255 </mat-hint>
+        </mat-form-field>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Prioridad</mat-label>
+
+            <mat-select formControlName="priority">
+              <mat-option value="ALTO">Alta</mat-option>
+              <mat-option value="MEDIO">Media</mat-option>
+              <mat-option value="BAJO">Baja</mat-option>
+            </mat-select>
+
+            <mat-error>Selecciona prioridad</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha límite</mat-label>
+
+            <input matInput type="date" formControlName="dueDate" />
+
+            <mat-error>La fecha es obligatoria</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Asignar desarrollador</mat-label>
+
+          <mat-select formControlName="assignedUserId">
+            <mat-option [value]="null">Sin asignar</mat-option>
+
+            @for (dev of developers(); track dev.id) {
+              <mat-option [value]="dev.id"> {{ dev.fullname }} ({{ dev.username }}) </mat-option>
             }
           </mat-select>
-          <mat-hint>Solo puedes pasar a "En progreso" o "Completada"</mat-hint>
         </mat-form-field>
+
+        @if (isEdit && currentStatus !== TaskStatus.PENDIENTE) {
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+
+            <mat-select formControlName="status">
+              @for (s of managerStatuses; track s) {
+                <mat-option [value]="s">
+                  {{ s === TaskStatus.EN_PROGRESO ? 'En progreso' : 'Completada' }}
+                </mat-option>
+              }
+            </mat-select>
+
+            <mat-hint>Solo puedes pasar a "En progreso" o "Completada"</mat-hint>
+          </mat-form-field>
+        }
+      </form>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()" [disabled]="saving()" class="btn-ghost">Cancelar</button>
+
+    @if (isDeveloper()) {
+      @if (devCanAdvance()) {
+        <button mat-flat-button color="primary" (click)="advanceStatus()" [disabled]="saving()">
+          @if (saving()) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Enviar a revisión
+          }
+        </button>
       }
-    </form>
-  }
-
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()" [disabled]="saving()">Cancelar</button>
-  @if (isDeveloper()) {
-    @if (devCanAdvance()) {
-      <button mat-flat-button color="primary" (click)="advanceStatus()" [disabled]="saving()">
+    } @else {
+      <button mat-flat-button color="primary" (click)="saveTask()" [disabled]="saving()">
         @if (saving()) {
           <mat-spinner diameter="18"></mat-spinner>
         } @else {
-          Enviar a revisión
+          {{ isEdit ? 'Guardar cambios' : 'Crear tarea' }}
         }
       </button>
     }
-  } @else {
-    <button mat-flat-button color="primary" (click)="saveTask()" [disabled]="saving()">
-      @if (saving()) {
-        <mat-spinner diameter="18"></mat-spinner>
-      } @else {
-        {{ isEdit ? 'Guardar cambios' : 'Crear tarea' }}
-      }
-    </button>
-  }
-</mat-dialog-actions>
+  </mat-dialog-actions>
+</div>

@@ -104,14 +104,15 @@
 }
 
 .add-task-btn {
-  color: #d97706;
-  border-color: #d97706;
+  color: #5b21b6;
+  border-color: #7c3aed;
   font-size: 0.78rem;
   height: 30px;
   line-height: 30px;
   padding: 0 10px;
+  margin-right: 14px;
   
-  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  mat-icon { padding-left: 10px; font-size: 16px; width: 16px; height: 16px; }
 }
 
 .task-list {
