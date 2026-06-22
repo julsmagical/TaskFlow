@@ -105,4 +105,11 @@ public class Project {
     public Audit getAudit() {
         return audit;
     }
+
+    public boolean hasAssignedUser(UUID userId) {
+    return tasks.stream()
+        .anyMatch(task ->
+            task.getAssignedUser() != null &&
+            task.getAssignedUser().getId().equals(userId));
+}
 }

@@ -147,11 +147,18 @@ public class ProjectService {
 
     private void assertCanAccess(Project project, UUID currentUserId, String currentUserRole) {
         boolean isAdmin = RoleName.ADMINISTRADOR.name().equals(currentUserRole);
-        boolean isOwner = project.isOwnedBy(currentUserId);
-
-        if (!isAdmin && !isOwner) {
-            throw new AccessDeniedException("No tienes acceso a este proyecto.");
+        if (isAdmin) {
+            return;
         }
+        boolean isOwner = project.isOwnedBy(currentUserId);
+        if (isOwner) {
+            return;
+        }
+        boolean isDeveloper = RoleName.DESARROLLADOR.name().equals(currentUserRole);
+        if (isDeveloper && project.hasAssignedUser(currentUserId)) {
+            return;
+        }
+        throw new AccessDeniedException("No tienes acceso a este proyecto.");
     }
 
     private void assertCanModify(Project project, UUID currentUserId, String currentUserRole) {
