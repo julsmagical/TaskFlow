@@ -120,7 +120,7 @@
           </mat-select>
         </mat-form-field>
 
-        @if (isEdit && currentStatus !== TaskStatus.PENDIENTE) {
+        @if (isEdit && currentStatus === TaskStatus.EN_REVISION) {
           <mat-form-field appearance="outline">
             <mat-label>Estado</mat-label>
 
