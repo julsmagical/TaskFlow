@@ -73,12 +73,14 @@ export class TasksComponent implements OnInit {
   readonly selectedStatus = signal<TaskStatus | null>(null);
   readonly selectedPriority = signal<TaskPriority | null>(null);
 
-  //sidebar de tareas pendientes
+  //sidebar de tareas pendientes(en progreso)
   readonly myPendingTasks = computed(() => {
     const userId = this.sessionStore.user()?.id;
     const allTasks: TaskResponse[] = [];
     this.tasksByProject().forEach((tasks) => allTasks.push(...tasks));
-    return allTasks.filter((t) => t.assignedUserID === userId && t.status === TaskStatus.PENDIENTE);
+    return allTasks.filter(
+      (t) => t.assignedUserID === userId && t.status === TaskStatus.EN_PROGRESO,
+    );
   });
 
   readonly filteredTasksByProject = computed(() => {
