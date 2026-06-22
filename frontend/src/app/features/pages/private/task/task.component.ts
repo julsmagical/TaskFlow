@@ -25,12 +25,27 @@ import { TaskStatus, TaskPriority } from '../../../../shared/enums/task';
 import { TaskFormComponent } from './task-form/task-form';
 import { MatDividerModule } from '@angular/material/divider';
 import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../shared/constants/task';
+import { ConfirmDialogComponent } from './task-confirm/task-confirm';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, NgClass, FormsModule, MatButtonModule, MatCardModule, MatChipsModule, MatExpansionModule, MatFormFieldModule, 
-    MatIconModule, MatMenuModule, MatProgressSpinnerModule, MatSelectModule, MatTooltipModule, MatDividerModule ],
+  imports: [
+    CommonModule,
+    NgClass,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatTooltipModule,
+    MatDividerModule,
+  ],
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
 })
@@ -44,7 +59,7 @@ export class TasksComponent implements OnInit {
 
   //mapear constants
   readonly taskStatusLabels = TASK_STATUS_LABELS;
-  readonly taskPriorityLabels = TASK_PRIORITY_LABELS; 
+  readonly taskPriorityLabels = TASK_PRIORITY_LABELS;
 
   readonly TaskStatus = TaskStatus;
   readonly TaskPriority = TaskPriority;
@@ -63,9 +78,7 @@ export class TasksComponent implements OnInit {
     const userId = this.sessionStore.user()?.id;
     const allTasks: TaskResponse[] = [];
     this.tasksByProject().forEach((tasks) => allTasks.push(...tasks));
-    return allTasks.filter(
-      (t) => t.assignedUserID === userId && t.status === TaskStatus.PENDIENTE,
-    );
+    return allTasks.filter((t) => t.assignedUserID === userId && t.status === TaskStatus.PENDIENTE);
   });
 
   readonly filteredTasksByProject = computed(() => {
@@ -163,14 +176,17 @@ export class TasksComponent implements OnInit {
       width: '560px',
       data: { projectId: project.id, task: null },
     });
+
     ref.afterClosed().subscribe((created) => {
-      if (created) {
-        const loaded = new Set(this.loadedProjects());
-        loaded.delete(project.id);
-        this.loadedProjects.set(loaded);
-        this.loadTasks(project.id);
-        this.snackBar.open('Tarea creada correctamente', 'OK', { duration: 3000 });
+      if (!created) {
+        return;
       }
+
+      this.refreshProjectTasks(project.id);
+
+      this.snackBar.open('Tarea creada correctamente', 'OK', {
+        duration: 3000,
+      });
     });
   }
 
@@ -179,31 +195,48 @@ export class TasksComponent implements OnInit {
       width: '560px',
       data: { projectId: project.id, task },
     });
+
     ref.afterClosed().subscribe((updated) => {
-      if (updated) {
-        const loaded = new Set(this.loadedProjects());
-        loaded.delete(project.id);
-        this.loadedProjects.set(loaded);
-        this.loadTasks(project.id);
-        this.snackBar.open('Tarea actualizada correctamente', 'OK', { duration: 3000 });
+      if (!updated) {
+        return;
       }
+
+      this.refreshProjectTasks(project.id);
+
+      this.snackBar.open('Tarea actualizada correctamente', 'OK', {
+        duration: 3000,
+      });
     });
   }
 
   deleteTask(task: TaskResponse, project: ProjectResponse): void {
-    if (!confirm(`¿Eliminar la tarea "${task.title}"?`)) return;
-    this.taskService.delete(task.id).subscribe({
-      next: () => {
-        const loaded = new Set(this.loadedProjects());
-        loaded.delete(project.id);
-        this.loadedProjects.set(loaded);
-        this.loadTasks(project.id);
-        this.snackBar.open('Tarea eliminada', 'OK', { duration: 3000 });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '380px',
+      data: {
+        title: 'Eliminar tarea',
+        message: `¿Seguro que deseas eliminar "${task.title}"? Esta acción no se puede deshacer.`,
+        confirmLabel: 'Eliminar',
       },
-      error: (err) => {
-        const msg = err?.error?.message ?? 'Error al eliminar la tarea';
-        this.snackBar.open(msg, 'Cerrar', { duration: 4000 });
-      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+      this.taskService.delete(task.id).subscribe({
+        next: () => {
+          this.refreshProjectTasks(project.id);
+          this.snackBar.open('Tarea eliminada correctamente', 'OK', {
+            duration: 3000,
+          });
+        },
+        error: (err) => {
+          const msg = err?.error?.message ?? 'Error al eliminar la tarea';
+          this.snackBar.open(msg, 'Cerrar', {
+            duration: 4000,
+          });
+        },
+      });
     });
   }
 
@@ -214,5 +247,12 @@ export class TasksComponent implements OnInit {
 
   isOverdue(dueDate: string): boolean {
     return new Date(dueDate).getTime() < Date.now();
+  }
+
+  private refreshProjectTasks(projectId: string): void {
+    const loaded = new Set(this.loadedProjects());
+    loaded.delete(projectId);
+    this.loadedProjects.set(loaded);
+    this.loadTasks(projectId);
   }
 }
