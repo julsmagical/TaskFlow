@@ -34,17 +34,6 @@
 
       @if (canManage || canCreateTask) {
         <div class="project-menu">
-          @if (canCreateTask) {
-            <button
-              mat-icon-button
-              color="primary"
-              matTooltip="Agregar tarea"
-              (click)="$event.stopPropagation(); createTask.emit(project)"
-            >
-              <mat-icon>add_task</mat-icon>
-            </button>
-          }
-
           @if (canManage) {
             <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
               <mat-icon>more_vert</mat-icon>
