@@ -15,6 +15,7 @@ import { finalize } from 'rxjs';
 import { UserService } from '../../../../services/private/user.service';
 import { UserRole } from '../../../../../shared/enums/user';
 import { UserRequest } from '../../../../interfaces/public/user.interface';
+import { ROLE_NAME_LABELS } from '../../../../../shared/constants/user';
 
 @Component({
   selector: 'app-user-form',
@@ -43,11 +44,7 @@ export class UserFormComponent {
 
   readonly roles = Object.values(UserRole);
 
-  readonly roleLabels: Record<UserRole, string> = {
-    [UserRole.ADMINISTRADOR]: 'Administrador',
-    [UserRole.LIDER]: 'Líder',
-    [UserRole.DESARROLLADOR]: 'Desarrollador',
-  };
+  readonly roleNameLabel = ROLE_NAME_LABELS;
 
   readonly form = this.createForm();
 

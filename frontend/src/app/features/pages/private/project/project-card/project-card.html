@@ -20,7 +20,7 @@
             archived: project.status === ProjectStatus.ARCHIVADO,
           }"
         >
-          {{ project.status }}
+          {{ projectStatusLabels[project.status] }}
         </mat-chip>
       </div>
 
@@ -91,11 +91,11 @@
 
           <div class="task-chips">
             <mat-chip highlighted class="priority-chip" [ngClass]="task.priority.toLowerCase()">
-              {{ task.priority }}
+              {{ taskPriorityLabels[task.priority] }}
             </mat-chip>
 
             <mat-chip highlighted class="task-status-chip" [ngClass]="task.status.toLowerCase()">
-              {{ task.status }}
+              {{ taskStatusLabels[task.status] }}
             </mat-chip>
           </div>
         </div>

@@ -12,6 +12,8 @@ import { ProjectResponse } from '../../../../interfaces/private/project.interfac
 import { TaskResponse } from '../../../../interfaces/private/task.interface';
 import { TaskPriority, TaskStatus } from '../../../../../shared/enums/task';
 import { ProjectStatus } from '../../../../../shared/enums/project';
+import { PROJECT_STATUS_LABELS } from '../../../../../shared/constants/project';
+import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../../shared/constants/task';
 
 @Component({
   selector: 'app-project-card',
@@ -32,8 +34,10 @@ import { ProjectStatus } from '../../../../../shared/enums/project';
 })
 export class ProjectCardComponent {
   readonly ProjectStatus = ProjectStatus;
-  readonly TaskStatus = TaskStatus;
-  readonly TaskPriority = TaskPriority;
+
+  readonly projectStatusLabels = PROJECT_STATUS_LABELS;
+  readonly taskStatusLabels = TASK_STATUS_LABELS;
+  readonly taskPriorityLabels = TASK_PRIORITY_LABELS;
 
   @Input({ required: true })
   project!: ProjectResponse;
