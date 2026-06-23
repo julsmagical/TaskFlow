@@ -1,36 +1,35 @@
 <div class="home-container">
-
   <div class="welcome">
-    <h1>Bienvenido, {{ fullname }}</h1>
+    <h1>Bienvenido, {{ fullname() }}</h1>
     <p>
-      Bienvenido a TaskFlow, un espacio para trabajar en equipo organizando la asignación de tareas entre desarrolladores.
+      Bienvenido a TaskFlow, un espacio para trabajar en equipo organizando la asignación de tareas
+      entre desarrolladores.
     </p>
   </div>
-  
+
   <img class="hero-img" src="assets/images/banner-taskflow.jpg" alt="TaskFlow banner" />
 
   <div class="quick-links">
-
     <mat-card class="quick-card" routerLink="/projects">
-    <div class="card-content">
+      <div class="card-content">
         <mat-icon>folder</mat-icon>
 
         <div class="text">
-        <h3>Proyectos</h3>
-        <p>Gestiona y organiza tus proyectos</p>
+          <h3>Proyectos</h3>
+          <p>Gestiona y organiza tus proyectos</p>
         </div>
-    </div>
+      </div>
     </mat-card>
 
     <mat-card class="quick-card" routerLink="/tasks">
-    <div class="card-content">
+      <div class="card-content">
         <mat-icon>task_alt</mat-icon>
 
         <div class="text">
-        <h3>Tareas</h3>
-        <p>Revisa y administra tus tareas</p>
+          <h3>Tareas</h3>
+          <p>Revisa y administra tus tareas</p>
         </div>
-    </div>
+      </div>
     </mat-card>
   </div>
 </div>
