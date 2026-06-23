@@ -41,7 +41,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @RequireLiderOrAdmin
     public ResponseEntity<ApiResponse<UserResponse>> findById(@PathVariable UUID id){
         return ResponseEntity.ok(userService.findById(id));
     }
